@@ -1,0 +1,123 @@
+<document>
+<properties>
+  <author email="dwayneb@users.sourceforge.net">David Bernard</author>
+  </properties>
+ <body>
+ <section name="Aggregation">
+<p>Good practice :
+<ul>
+<li>on web, is to download/call one big js file instead of several small files.</li>
+<li>in source code organisation is to have unit file (with one "concern").</li>
+</ul>
+</p>
+<p>The major js and css framework/lib provide source code in both version (one big, lot of small), or provide a online tool to generate the big.</p>
+<p>The following option allow you to use/store small files into your source and generate the big at build time. The aggregation is done after yuicompression</p> 
+
+<subsection name="Basic sample">
+<p>To Compress every js and css files and aggregate every js file under ${project.build.directory}/${project.build.finalName}/static/ into all.js :
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.sf.alchim</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>        
+        <configuration>
+          <nosuffix>true</nosuffix>
+          <aggregations>
+            <aggregation>
+              <!-- remove files after aggregation (default: false)
+              <removeIncluded>true</removeIncluded>
+              -->
+              <!-- insert new line after each concatenation (default: false) -->
+              <insertNewLine>true</insertNewLine>
+              <output>${project.build.directory}/${project.build.finalName}/static/all.js</output>
+              <!-- files to include, path relative to output's directory or absolute path-->
+              <includes>
+                <include>${basedir}/src/licenses/license.js</include>
+                <include>**/*.js</include>
+              </includes>
+              <!-- files to exclude, path relative to output's directory
+              <excludes>
+                <exclude>**/*.pack.js</exclude>
+                <exclude>**/compressed.css</exclude>
+              </excludes>
+              -->
+            </aggregation>
+          </aggregations>
+        </configuration>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+</subsection>
+
+<subsection name="Removing included files">
+<p>Using removeIncluded option, remove file, but the war plugin will then add file.
+So if you want to remove file after aggregation and don't want war plugin copy them, then you need to use warSourceExcludes :
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.sf.alchim</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>        
+        <configuration>
+          <nosuffix>true</nosuffix>
+          <aggregations>
+           <aggregation>
+              <!-- remove files after aggregation (default: false) -->
+              <removeIncluded>true</removeIncluded>
+              <!-- insert new line after each concatenation (default: false) -->
+              <insertNewLine>true</insertNewLine>
+              <output>${project.build.directory}/${project.build.finalName}/static/all-2.js</output>
+              <!-- files to include, path relative to output's directory -->
+              <includes>
+                <include>toAggregateAndRemove/**.js</include>
+              </includes>
+            </aggregation>
+          </aggregations>
+        </configuration>
+      </plugin>
+...
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warSourceExcludes>**/toAggregateAndRemove/**</warSourceExcludes>
+        </configuration>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+</subsection>
+
+</section>
+</body>
+</document>

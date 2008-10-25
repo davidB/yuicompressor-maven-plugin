@@ -1,0 +1,29 @@
+<document>
+<properties>
+  <author email="dwayneb@users.sourceforge.net">David Bernard</author>
+  </properties>
+  <meta name="keyword" content="YUI Compressor, mojo"/>
+ <body>
+<section name="Related Links">
+<subsection name="Complementary docs">
+<ul>
+<li><a href="http://yuiblog.com/blog/2008/02/11/helping-the-yui-compressor/">Helping the YUI Compressor</a></li>
+</ul>
+</subsection>
+<subsection name="Complementary tools">
+<ul>
+<li><a href="">JSDoc</a>: a documentation tool for javascript</li>
+<li><a href="http://www.dev.abiss.gr/mvn-jstools/index.html">Maven JSTools</a>: provide JSDoc and JSLint report, and a Servlet Filter that loads Javascript files or other static resources from the runtime classpath.</li>
+<li><a href="http://jsunit.berlios.de/maven2.html">Maven JsUnit</a>: a plugin to run and to report <a href="http://jsunit.berlios.de/">JsUnit</a> test.</li>
+<li><a href="http://alchim.sf.net/winstone-maven-plugin/index.html">Winstone Maven Plugin</a>: Embed your warfile into/with the winstone JAR itself. This allows an all-in-one container plus web-application JAR file to run as a standalone application.</li>
+</ul>
+</subsection>
+
+<subsection name="Concurrent">
+<ul>
+<li><a href="http://ossi.mobilvox.com/maven-js-plugin/">MobilVox Maven JavaScript Plugin</a>: compress javascript file of a project</li>
+</ul>
+</subsection>
+</section>
+</body>
+</document>

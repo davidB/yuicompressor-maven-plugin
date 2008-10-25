@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="${project.name}">
+  <bannerLeft>
+    <name>${project.name}</name>
+    <href>${project.url}</href>
+  </bannerLeft>
+  <publishDate position="left" format="yyyy-MM-dd HH:mm" />
+  <version position="left"/>
+  <poweredBy>
+    <logo name="Hosted on SourceForge.net" href="http://sourceforge.net" img="http://sflogo.sourceforge.net/sflogo.php?group_id=65041&amp;type=2" />
+    <logo name="Build with Maven 2" href="http://maven.apache.org" img="images/logos/maven-feather.png" />
+    <logo name="CC-GNU LGPL" href="http://creativecommons.org/licenses/LGPL/2.1/" img="http://creativecommons.org/images/public/cc-LGPL-a.png" />
+  </poweredBy>
+
+  <body>
+    <links>
+      <item name="download" href="../download/releases/" />
+      <item name="changelog/scm" href="../hg/yuicompressor-maven-plugin/"/>
+      <item name="sourceforge" href="http://sf.net/projects/alchim" />
+    </links>
+
+    <menu name="Overview">
+      <item name="Introduction" href="index.html" />
+      <item name="Goals" href="plugin-info.html" />
+      <item name="Usage: compress" href="usage_compress.html" />
+      <item name="Usage: jslint" href="usage_jslint.html" />
+      <!-- item name="FAQ" href="faq.html" /-->
+    </menu>
+
+    <menu name="Examples">
+      <item name="Aggregate" href="ex_aggregation.html" />
+      <item name="Gzip" href="ex_gzip.html" />
+      <item name="Fail on warning" href="ex_failOnWarning.html" />
+    </menu>
+
+    <menu name="Links">
+      <item name="YUI Compressor" href="http://developer.yahoo.com/yui/compressor/" />
+      <item name="JSLint" href="http://jslint.com/" />
+      <item name="Others..." href="links.html"/>
+    </menu>
+
+    <menu ref="reports" />
+  </body>
+</project>

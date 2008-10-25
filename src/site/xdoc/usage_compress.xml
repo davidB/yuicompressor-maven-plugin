@@ -1,0 +1,117 @@
+<document>
+<properties>
+  <author email="dwayneb@users.sourceforge.net">David Bernard</author>
+  </properties>
+ <body>
+ <section name="Usage">
+ 
+ <subsection name="Without pom.xml change">
+<p>To Compress every js and css files :
+ <source><![CDATA[
+ $> mvn net.sf.alchim:yuicompressor-maven-plugin:compress
+ ]]></source>
+ with the -X option compressed file are listed.
+</p>
+
+<p>To force compress every js and css files and fail if warning :
+ <source><![CDATA[
+ $> mvn net.sf.alchim:yuicompressor-maven-plugin:compress \
+     -Dmaven.yuicompressor.force=true \
+     -Dmaven.yuicompressor.failOnWarning=true \
+ ]]></source>
+</p>
+ </subsection>
+
+
+ 
+ <subsection name="With pom.xml change">
+<p>To Compress every js and css files at process-resources phase (before compile) :
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.sf.alchim</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>        
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+
+<p>To Compress every js and css files but without renaming with suffix :
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.sf.alchim</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>        
+        <configuration>
+          <nosuffix>true</nosuffix>
+        </configuration>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+
+<p>To Compress every js and css files except already compressed files like *.pack.js files and compressed.css :
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.sf.alchim</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>        
+        <configuration>
+          <excludes>
+            <exclude>**/*.pack.js</exclude>
+            <exclude>**/compressed.css</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+</subsection>
+</section>
+</body>
+</document>

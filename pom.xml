@@ -1,0 +1,100 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.sf.alchim</groupId>
+		<artifactId>alchim-parent</artifactId>
+		<version>3</version>
+	</parent>
+	<artifactId>yuicompressor-maven-plugin</artifactId>
+	<packaging>maven-plugin</packaging>
+	<version>0.8</version>
+	<name>YUI Compressor Maven Mojo</name>
+	<description> To compress (Minify + Ofuscate) Javascript files and CSS
+		files (using YUI Compressor from Julien Lecomte) and/or to check
+		Javascript files with jslint. </description>
+	<dependencies>
+		<dependency>
+			<groupId>com.yahoo.platform.yui</groupId>
+			<artifactId>yuicompressor</artifactId>
+			<version>2.3.6</version>
+		</dependency>
+		<dependency>
+			<groupId>rhino</groupId>
+			<artifactId>js</artifactId>
+			<version>1.6R7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>2.0.7</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-project</artifactId>
+			<version>2.0.7</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.retrotranslator</groupId>
+			<artifactId>retrotranslator-runtime</artifactId>
+			<version>1.2.1</version>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>retrotranslator-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>translate</goal>
+						</goals>
+						<configuration>
+							<!--embed>jdk14</embed-->
+							<filesets>
+								<fileset>
+									<directory>${project.build.outputDirectory}</directory>
+									<includes>
+										<include>**/*.class</include>
+									</includes>
+								</fileset>
+							</filesets>
+						</configuration>
+						<!--
+							Can't use goal "translate-project", because it generate a jar
+							with classifier, and classifier aren't supported by plugin
+							<goals> <goal>translate-project</goal> </goals> <configuration>
+							<classifier></classifier> <attach>true</attach> </configuration>
+						-->
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assembly/project.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+	<properties>
+		<java.src.version>1.5</java.src.version>
+		<runtime.log>target/velocity.log</runtime.log>
+	</properties>
+</project>

@@ -1,0 +1,80 @@
+<document>
+<properties>
+  <author email="dwayneb@users.sourceforge.net">David Bernard</author>
+  </properties>
+ <body>
+ <section name="Usage">
+ 
+ <subsection name="Without pom.xml change">
+<p>To Check every js :
+ <source><![CDATA[
+ $> mvn net.sf.alchim:yuicompressor-maven-plugin:jslint
+ ]]></source>
+</p>
+ </subsection>
+
+
+ 
+ <subsection name="With pom.xml change">
+<p>To Check every js :
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.sf.alchim</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>jslint</goal>
+                </goals>
+            </execution>
+        </executions>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+
+<p>To check and compress every js and css files except already compressed files like *.pack.js files and compressed.css :
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+        <plugin>
+            <groupId>net.sf.alchim</groupId>
+            <artifactId>yuicompressor-maven-plugin</artifactId>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>jslint</goal>
+                        <goal>compress</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <excludes>
+                    <exclude>**/*.pack.js</exclude>
+                    <exclude>**/compressed.css</exclude>
+                </excludes>
+            </configuration>
+        </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+</subsection>
+</section>
+</body>
+</document>
