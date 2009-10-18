@@ -1,0 +1,225 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building yuicompressor-maven-plugin-demo Maven Webapp
+[INFO]    task-segment: [clean, package]
+[INFO] ------------------------------------------------------------------------
+[INFO] [clean:clean {execution: default-clean}]
+[INFO] Deleting directory /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target
+[INFO] [resources:resources {execution: default-resources}]
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] Copying 2 resources
+[INFO] Copying 2 resources
+[INFO] Copying 2 resources to redirect
+[INFO] [yuicompressor:jslint {execution: default}]
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_r02.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_r02.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_r01.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_r01.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_rf01.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_rf01.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_rf02.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/file_rf02.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/redirect/file_rr02.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/redirect/file_rr02.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/redirect/file_rr01.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/classes/redirect/file_rr01.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/zero.js
+jslint: Couldn't open file '/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/zero.js'.
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/zero.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/toAggregateAndRemove/foo.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/toAggregateAndRemove/foo.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/toAggregateAndRemove/bar.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/toAggregateAndRemove/bar.js
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/uni-form.jquery.js
+Lint at line 1 character 296: Unmatched '{'.
+jQuery.fn.uniform = function(settings) {
+  settings = jQuery.extend({
+    valid_class    : 'valid',
+    invalid_class  : 'invalid',
+    focused_class  : 'focused',
+    holder_class   : 'ctrlHolder',
+    field_selector : 'input, select, textarea'
+  }, settings);
+  
+  return this.each(function() {
+    var form = jQuery(this);
+    
+    // Focus specific control holder
+    var focusControlHolder = function(element) {
+      var parent = element.parent();
+      
+      while(typeof(parent) == 'object') {
+        if(parent) {
+          if(parent[0] && (parent[0].className.indexOf(settings.holder_class) >= 0)) {
+            parent.addClass(settings.focused_class);
+            return;
+          } // if
+        } // if
+        parent = jQuery(parent.parent());
+      } // while
+    };
+    
+    // Select form fields and attach them higlighter functionality
+    form.find(settings.field_selector).focus(function() {
+      form.find('.' + settings.focused_class).removeClass(settings.focused_class);
+      focusControlHolder(jQuery(this));
+    }).blur(function() {
+      form.find('.' + settings.focused_class).removeClass(settings.focused_class);
+    });
+  });
+};
+
+// Auto set on page load...
+$(document).ready(function() {
+  jQuery('form.uniForm').uniform();
+});
+
+Lint at line 2 character 336: Expected ')' and instead saw ''.
+
+
+Lint at line 3 character 336: Missing semicolon.
+
+
+Lint at line 1 character 40: Unmatched '{'.
+jQuery.fn.uniform = function(settings) {
+  settings = jQuery.extend({
+    valid_class    : 'valid',
+    invalid_class  : 'invalid',
+    focused_class  : 'focused',
+    holder_class   : 'ctrlHolder',
+    field_selector : 'input, select, textarea'
+  }, settings);
+  
+  return this.each(function() {
+    var form = jQuery(this);
+    
+    // Focus specific control holder
+    var focusControlHolder = function(element) {
+      var parent = element.parent();
+      
+      while(typeof(parent) == 'object') {
+        if(parent) {
+          if(parent[0] && (parent[0].className.indexOf(settings.holder_class) >= 0)) {
+            parent.addClass(settings.focused_class);
+            return;
+          } // if
+        } // if
+        parent = jQuery(parent.parent());
+      } // while
+    };
+    
+    // Select form fields and attach them higlighter functionality
+    form.find(settings.field_selector).focus(function() {
+      form.find('.' + settings.focused_class).removeClass(settings.focused_class);
+      focusControlHolder(jQuery(this));
+    }).blur(function() {
+      form.find('.' + settings.focused_class).removeClass(settings.focused_class);
+    });
+  });
+};
+
+// Auto set on page load...
+$(document).ready(function() {
+  jQuery('form.uniForm').uniform();
+});
+
+Lint at line 4 character 336: Missing semicolon.
+
+
+[INFO] check file :/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/highlighter.js
+jslint: No problems found in /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp/static/highlighter.js
+[INFO] nb warnings: 0, nb errors: 0
+[INFO] [yuicompressor:compress {execution: default}]
+[INFO] file_r02.js (14b) -> file_r02.js (14b)[100%]
+[INFO] file_r02.js (14b) -> file_r02.js.gz (32b)[228%]
+[INFO] file_r01.js (14b) -> file_r01.js (14b)[100%]
+[INFO] file_r01.js (14b) -> file_r01.js.gz (32b)[228%]
+[WARNING] .../target/classes/file_rf01.js:line -1:column -1:Try to use a single 'var' statement per scope.
+var artifactId="yuicompressor-maven-plugin-demo"; ---> var  <--- rf01="rf01";
+[INFO] file_rf01.js (66b) -> file_rf01.js (66b)[100%]
+[INFO] file_rf01.js (66b) -> file_rf01.js.gz (82b)[124%]
+[INFO] file_rf02.js (14b) -> file_rf02.js (14b)[100%]
+[INFO] file_rf02.js (14b) -> file_rf02.js.gz (31b)[221%]
+[INFO] file_rr02.js (16b) -> file_rr02.js (16b)[100%]
+[INFO] file_rr02.js (16b) -> file_rr02.js.gz (33b)[206%]
+[INFO] file_rr01.js (16b) -> file_rr01.js (16b)[100%]
+[INFO] file_rr01.js (16b) -> file_rr01.js.gz (33b)[206%]
+[INFO] zero.js (0b) -> zero.js (0b)[100%]
+[INFO] zero.js (0b) -> zero.js.gz (20b)[2000%]
+[INFO] foo.js (15b) -> foo.js (14b)[93%]
+[INFO] foo.js (15b) -> foo.js.gz (32b)[213%]
+[INFO] bar.js (15b) -> bar.js (14b)[93%]
+[INFO] bar.js (15b) -> bar.js.gz (32b)[213%]
+[INFO] uni-form.css (8452b) -> uni-form.css (3454b)[40%]
+[INFO] uni-form.css (8452b) -> uni-form.css.gz (1054b)[12%]
+[INFO] uni-form-generic.css (4902b) -> uni-form-generic.css (1623b)[33%]
+[INFO] uni-form-generic.css (4902b) -> uni-form-generic.css.gz (445b)[9%]
+[WARNING] .../src/main/webapp/static/uni-form.jquery.js:line -1:column -1:Try to use a single 'var' statement per scope.
+{var form=jQuery(this); ---> var  <--- focusControlHolder=function(element){var parent=
+[WARNING] .../src/main/webapp/static/uni-form.jquery.js:line -1:column -1:Found an undeclared symbol: $
+;});});}; ---> $ <--- (document).ready(function(){
+[INFO] uni-form.jquery.js (1261b) -> uni-form.jquery.js (687b)[54%]
+[INFO] uni-form.jquery.js (1261b) -> uni-form.jquery.js.gz (341b)[27%]
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
+all:oElm.getElementsByTagName(strTagName); ---> var  <--- arrReturnElements=new Array();strClassName=strClassName
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
+strClassName.replace(/\-/g,"\\-"); ---> var  <--- oRegExp=new RegExp("(^|\\s)"+strClassName+"(\\s|$)"
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
+RegExp("(^|\\s)"+strClassName+"(\\s|$)"); ---> var  <--- oElement;for(var i=0;i
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
++"(\\s|$)");var oElement;for( ---> var  <--- i=0;i<arrElements.length;
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
+(" ");if(blnMayAlreadyExist){ ---> var  <--- strClassUpper=strClass.toUpperCase();for(
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
+=strClass.toUpperCase();for( ---> var  <--- i=0;i<arrList.length;
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
+objElement.className.split(" "); ---> var  <--- strClassUpper=strClass.toUpperCase();for(
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Try to use a single 'var' statement per scope.
+=strClass.toUpperCase();for( ---> var  <--- i=0;i<arrList.length;
+[WARNING] .../src/main/webapp/static/highlighter.js:line -1:column -1:Found an undeclared symbol: i
+Highlighter.settings.field_class);for( ---> i <--- =0;i<fields.length;i
+[INFO] highlighter.js (3213b) -> highlighter.js (1667b)[51%]
+[INFO] highlighter.js (3213b) -> highlighter.js.gz (597b)[18%]
+[INFO] total input (17998b) -> output (7599b)[42%]
+[INFO] generate aggregation : /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/yuicompressor-maven-plugin-demo/static/all.js
+[INFO] all.js (2387b) -> all.js.gz (865b)[36%]
+[INFO] generate aggregation : /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/yuicompressor-maven-plugin-demo/static/all-2.js
+[INFO] all-2.js (30b) -> all-2.js.gz (44b)[146%]
+[INFO] nb warnings: 12, nb errors: 0
+[INFO] [compiler:compile {execution: default-compile}]
+[INFO] No sources to compile
+[INFO] [resources:testResources {execution: default-testResources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/test/resources
+[INFO] [compiler:testCompile {execution: default-testCompile}]
+[INFO] Compiling 1 source file to /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/test-classes
+[INFO] [surefire:test {execution: default-test}]
+[INFO] Surefire report directory: /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running net.sf.alchim.yuicompressor.ResourcesTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.047 sec
+
+Results :
+
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] [war:war {execution: default-war}]
+[INFO] Packaging webapp
+[INFO] Assembling webapp[yuicompressor-maven-plugin-demo] in [/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/yuicompressor-maven-plugin-demo]
+[INFO] Processing war project
+[INFO] Copying webapp resources[/home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/src/main/webapp]
+[INFO] Webapp assembled in[64 msecs]
+[INFO] Building war: /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/target/yuicompressor-maven-plugin-demo.war
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 6 seconds
+[INFO] Finished at: Sun Oct 18 21:42:20 CEST 2009
+[INFO] Final Memory: 25M/79M
+[INFO] ------------------------------------------------------------------------
+Running post-build script in: /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/validate.groovy
+Finished post-build script in: /home/dwayne/work/oss/maven-yuicompressor-plugin/src/it/demo01/validate.groovy

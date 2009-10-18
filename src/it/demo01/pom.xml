@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+        >
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>net.sf.alchim</groupId>
+  <artifactId>yuicompressor-maven-plugin-demo</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>yuicompressor-maven-plugin-demo Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.3.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <properties>
+    <value.rf01>rf01</value.rf01>
+    <value.rf02>rf02</value.rf02>
+  </properties>
+  <build>
+    <finalName>yuicompressor-maven-plugin-demo</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/resources-filtering</directory>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources-redirect</directory>
+        <targetPath>redirect</targetPath>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <version>@project.version@</version>
+        <dependencies>
+          <dependency>
+      <groupId>net.alchim31.3rd.com.yahoo.platform.yui</groupId>
+      <artifactId>yuicompressor</artifactId>
+      <version>2.4.2</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <goals>
+              <goal>jslint</goal>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <nosuffix>true</nosuffix>
+          <!--nomunge>true</nomunge-->
+          <force>true</force>
+          <gzip>true</gzip>
+          <excludes>
+            <exclude>**/*.pack.js</exclude>
+            <exclude>**/compressed.css</exclude>
+          </excludes>
+          <aggregations>
+            <aggregation>
+              <!-- remove files after aggregation (default: false)
+                                   <removeIncluded>true</removeIncluded>
+                               -->
+              <!-- insert new line after each concatenation (default: false) -->
+              <insertNewLine>true</insertNewLine>
+              <output>${project.build.directory}/${project.build.finalName}/static/all.js</output>
+              <!-- files to include, path relative to output's directory -->
+              <includes>
+                <include>**/*.js</include>
+              </includes>
+              <!-- files to exclude, path relative to output's directory -->
+              <excludes>
+                <exclude>**/*.pack.js</exclude>
+                <exclude>**/compressed.css</exclude>
+              </excludes>
+            </aggregation>
+            <aggregation>
+              <!-- remove files after aggregation (default: false) -->
+              <removeIncluded>true</removeIncluded>
+              <!-- insert new line after each concatenation (default: false) -->
+              <insertNewLine>true</insertNewLine>
+              <output>${project.build.directory}/${project.build.finalName}/static/all-2.js</output>
+              <!-- files to include, path relative to output's directory -->
+              <includes>
+                <include>toAggregateAndRemove/foo.js</include>
+                <include>toAggregateAndRemove/bar.js</include>
+              </includes>
+            </aggregation>
+          </aggregations>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warSourceExcludes>**/toAggregateAndRemove/**</warSourceExcludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
