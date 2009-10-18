@@ -47,13 +47,6 @@
         <groupId>@project.groupId@</groupId>
         <artifactId>yuicompressor-maven-plugin</artifactId>
         <version>@project.version@</version>
-        <dependencies>
-          <dependency>
-      <groupId>net.alchim31.3rd.com.yahoo.platform.yui</groupId>
-      <artifactId>yuicompressor</artifactId>
-      <version>2.4.2</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
             <goals>
