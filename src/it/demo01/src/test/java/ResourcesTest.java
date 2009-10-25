@@ -1,4 +1,4 @@
-package net.sf.alchim.yuicompressor;
+package net.alchim31.maven.yuicompressor;
 
 import java.io.File;
 

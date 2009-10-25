@@ -8,14 +8,14 @@
  <subsection name="Without pom.xml change">
 <p>To Compress every js and css files :
  <source><![CDATA[
- $> mvn net.sf.alchim:yuicompressor-maven-plugin:compress
+ $> mvn net.alchim31.maven:yuicompressor-maven-plugin:compress
  ]]></source>
  with the -X option compressed file are listed.
 </p>
 
 <p>To force compress every js and css files and fail if warning :
  <source><![CDATA[
- $> mvn net.sf.alchim:yuicompressor-maven-plugin:compress \
+ $> mvn net.alchim31.maven:yuicompressor-maven-plugin:compress \
      -Dmaven.yuicompressor.force=true \
      -Dmaven.yuicompressor.failOnWarning=true \
  ]]></source>
@@ -33,7 +33,7 @@
     <plugins>
 ...
       <plugin>
-        <groupId>net.sf.alchim</groupId>
+        <groupId>net.alchim31.maven</groupId>
         <artifactId>yuicompressor-maven-plugin</artifactId>
         <executions>
           <execution>
@@ -59,7 +59,7 @@
     <plugins>
 ...
       <plugin>
-        <groupId>net.sf.alchim</groupId>
+        <groupId>net.alchim31.maven</groupId>
         <artifactId>yuicompressor-maven-plugin</artifactId>
         <executions>
           <execution>
@@ -88,7 +88,7 @@
     <plugins>
 ...
       <plugin>
-        <groupId>net.sf.alchim</groupId>
+        <groupId>net.alchim31.maven</groupId>
         <artifactId>yuicompressor-maven-plugin</artifactId>
         <executions>
           <execution>

@@ -13,6 +13,11 @@ syntax: glob
 .project
 .manager
 
+# idea
+*.iml
+*.iws
+*.ipr
+
 # building
 target
 build

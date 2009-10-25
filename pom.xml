@@ -21,6 +21,11 @@
     <url>http://github.com/davidB/${project.artifactId}/</url>
   </scm>
 
+  <issueManagement>
+    <system>GitHub</system>
+    <url>http://github.com/davidB/yuicompressor-maven-plugin/issues</url>
+  </issueManagement>
+  
   <repositories>
     <repository>
       <name>oss.sonatype.org - github-releases</name>

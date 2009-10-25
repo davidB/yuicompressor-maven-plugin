@@ -1,4 +1,4 @@
-package net.sf.alchim.mojo.yuicompressor;
+package net.alchim31.maven.yuicompressor;
 
 import org.apache.maven.plugin.logging.Log;
 import org.mozilla.javascript.ErrorReporter;
