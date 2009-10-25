@@ -1,17 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>net.alchim31</groupId>
-    <artifactId>alchim31-parent</artifactId>
-    <version>6</version>
+    <groupId>net.alchim31.maven</groupId>
+    <artifactId>alchim31-maven-parent</artifactId>
+    <version>7</version>
   </parent>
   <artifactId>yuicompressor-maven-plugin</artifactId>
-  <packaging>maven-plugin</packaging>
   <version>0.9-SNAPSHOT</version>
+  <packaging>maven-plugin</packaging>
   <name>YUI Compressor Maven Mojo</name>
-  <description> To compress (Minify + Ofuscate) Javascript files and CSS
+  <description>
+    To compress (Minify + Ofuscate) Javascript files and CSS
     files (using YUI Compressor from Julien Lecomte) and/or to check
-    Javascript files with jslint. </description>
+    Javascript files with jslint.
+  </description>
+
   <scm>
     <connection>scm:git:git://github.com/davidB/${project.artifactId}.git</connection>
     <developerConnection>scm:git:git@github.com:davidB/${project.artifactId}.git</developerConnection>
@@ -20,19 +23,13 @@
 
   <repositories>
     <repository>
-      <name>repo-embedded</name>
-      <id>repo-embedded</id>
-      <url>file://${basedir}/repo-embedded</url>
+      <name>oss.sonatype.org - github-releases</name>
+      <id>oss.sonatype.org-releases</id>
+      <url>http://oss.sonatype.org/content/repositories/github-releases</url>
     </repository>
   </repositories>
+
   <dependencies>
-    <!--
-    <dependency>
-      <groupId>com.yahoo.platform.yui</groupId>
-      <artifactId>yuicompressor</artifactId>
-      <version>2.3.6</version>
-    </dependency>
-    -->
     <dependency>
       <groupId>net.alchim31.3rd.com.yahoo.platform.yui</groupId>
       <artifactId>yuicompressor</artifactId>
