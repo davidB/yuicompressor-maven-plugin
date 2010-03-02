@@ -3,7 +3,7 @@
   <parent>
     <groupId>net.alchim31.maven</groupId>
     <artifactId>alchim31-maven-parent</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
   <artifactId>yuicompressor-maven-plugin</artifactId>
   <version>0.10-SNAPSHOT</version>
@@ -25,7 +25,7 @@
     <system>GitHub</system>
     <url>http://github.com/davidB/yuicompressor-maven-plugin/issues</url>
   </issueManagement>
-  
+
   <repositories>
     <repository>
       <name>oss.sonatype.org - github-releases</name>
@@ -60,6 +60,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
+        <version>2.5.1</version>
       </plugin>
     </plugins>
   </reporting>

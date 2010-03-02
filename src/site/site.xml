@@ -21,6 +21,7 @@
 
     <menu name="Overview">
       <item name="Introduction" href="index.html" />
+      <item name="Distribution" href="index.html#Distribution" />
       <item name="Goals" href="plugin-info.html" />
       <item name="Usage: compress" href="usage_compress.html" />
       <item name="Usage: jslint" href="usage_jslint.html" />
@@ -39,6 +40,6 @@
       <item name="Others..." href="links.html"/>
     </menu>
 
-    <menu ref="reports" />
+    <menu ref="reports"/>
   </body>
 </project>
