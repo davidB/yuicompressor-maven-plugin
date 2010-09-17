@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
@@ -62,6 +63,7 @@ public class Aggregation {
             scanner.setIncludes(new String[] { include });
             scanner.scan();
             String[] rpaths = scanner.getIncludedFiles();
+            Arrays.sort(rpaths);
             for (String rpath : rpaths) {
                 File file = new File(scanner.getBasedir(), rpath);
                 if (!includedFiles.contains(file)) {
