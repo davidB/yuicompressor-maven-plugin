@@ -11,13 +11,15 @@ import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
 
 public class Aggregation {
+    public File inputDir;
     public File output;
     public String[] includes;
     public String[] excludes;
     public boolean removeIncluded = false;
     public boolean insertNewLine = false;
-
+    
     public void run() throws Exception {
+        defineInputDir();
         List<File> files = getIncludedFiles();
         if (files.size() != 0) {
             FileOutputStream out = new FileOutputStream(output);
@@ -47,7 +49,14 @@ public class Aggregation {
         }
     }
 
-    protected List<File> getIncludedFiles() throws Exception {
+    private void defineInputDir() throws Exception {
+      if (inputDir == null) {
+        inputDir = output.getParentFile();
+      }
+      inputDir = inputDir.getCanonicalFile();
+    }
+    
+    private List<File> getIncludedFiles() throws Exception {
         ArrayList<File> back = new ArrayList<File>();
         if (includes != null) {
             for (String include : includes) {
@@ -73,7 +82,7 @@ public class Aggregation {
         } else {
             File file = new File(include);
             if (!file.isAbsolute()) {
-                file = new File(output.getParentFile(), include);
+                file = new File(inputDir, include);
             }
             if (!includedFiles.contains(file)) {
                 includedFiles.add(file);
@@ -83,7 +92,7 @@ public class Aggregation {
 
     private DirectoryScanner newScanner() throws Exception {
         DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir(output.getParentFile());
+        scanner.setBasedir(inputDir);
         if ((excludes != null) && (excludes.length != 0)) {
             scanner.setExcludes(excludes);
         }
