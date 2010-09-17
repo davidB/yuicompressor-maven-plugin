@@ -22,6 +22,8 @@
 <subsection name="Concurrent">
 <ul>
 <li><a href="http://ossi.mobilvox.com/maven-js-plugin/">MobilVox Maven JavaScript Plugin</a>: compress javascript file of a project</li>
+<li><a href="https://jawr.dev.java.net/">JAWR</a>: awr is a tunable packaging solution for Javascript and CSS which allows for rapid development of resources in separate module files</li>
+<li><a href="http://code.google.com/p/wro4j/">wro4j</a>: Web Resource Optimizer for Java</li>
 </ul>
 </subsection>
 </section>
