@@ -56,12 +56,14 @@ A sample output extract from my working project :
 </p>
 </subsection>
 </section>
+
 <section name="Distribution">
 <p>
 <ul>
-<li>Repository : http://oss.sonatype.org/content/repositories/github-releases/</li>
-<li>GroupId (changed between 0.7.1 and 0.9) : ${project.groupId}</li>
+<li>Repository : http://oss.sonatype.org/content/groups/public (since version 0.10, available on central repository)</li>
+<li>GroupId    : ${project.groupId}   (changed between 0.7.1 and 0.9)</li>
 <li>ArtifactId : ${project.artifactId}</li>
+<li>ArtifactId : ${project.version}</li>
 </ul>
 </p>
 <source><![CDATA[
@@ -75,14 +77,15 @@ A sample output extract from my working project :
 ...
 
       <plugin>
-        <groupId>net.alchim31.maven</groupId>
-        <artifactId>yuicompressor-maven-plugin</artifactId>
-        <version>0.9</version>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
 ...
       </plugin>
 ...
 ]]></source>
 
 </section>
+
 </body>
 </document>
