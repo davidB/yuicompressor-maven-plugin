@@ -90,7 +90,7 @@ public class BasicRhinoShell extends ScriptableObject {
             // Define some global functions particular to the BasicRhinoShell.
             // Note
             // that these functions are not part of ECMA.
-            String[] names = { "print", "quit", "version", "load", "help", "readFile" };
+            String[] names = { "print", "quit", "version", "load", "help", "readFile", "warn" };
             BasicRhinoShell.defineFunctionProperties(names, BasicRhinoShell.class, ScriptableObject.DONTENUM);
 
             args = processOptions(cx, args);
@@ -208,6 +208,14 @@ public class BasicRhinoShell extends ScriptableObject {
      */
     public void quit() {
         quitting = true;
+    }
+
+    public static void warn(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
+        String message = Context.toString( args[ 0 ] );
+        int line = (int) Context.toNumber( args[ 1 ] );
+        String source = Context.toString( args[ 2 ] );
+        int column = (int) Context.toNumber( args[ 3 ] );
+        cx.getErrorReporter().warning( message, null, line, source, column );
     }
 
     /**
