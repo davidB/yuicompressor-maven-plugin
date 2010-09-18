@@ -7,16 +7,15 @@
   <publishDate position="left" format="yyyy-MM-dd HH:mm" />
   <version position="left"/>
   <poweredBy>
-    <logo name="Hosted on SourceForge.net" href="http://sourceforge.net" img="http://sflogo.sourceforge.net/sflogo.php?group_id=65041&amp;type=2" />
+    <logo name="Click here to lend your support to: yuicompressor-maven-plugin and make a donation at www.pledgie.com !" href='http://www.pledgie.com/campaigns/13361' img='http://www.pledgie.com/campaigns/13361.png?skin_name=chrome'/>  
     <logo name="Build with Maven 2" href="http://maven.apache.org" img="images/logos/maven-feather.png" />
     <logo name="CC-GNU LGPL" href="http://creativecommons.org/licenses/LGPL/2.1/" img="http://creativecommons.org/images/public/cc-LGPL-a.png" />
   </poweredBy>
 
   <body>
     <links>
-      <item name="download" href="../download/releases/" />
-      <item name="changelog/scm" href="../hg/yuicompressor-maven-plugin/"/>
-      <item name="sourceforge" href="http://sf.net/projects/alchim" />
+      <item name="changelog/scm" href="http://github.com/davidB/yuicompressor-maven-plugin/"/>
+      <!--item name="sourceforge" href="http://sf.net/projects/alchim" /-->
     </links>
 
     <menu name="Overview">

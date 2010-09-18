@@ -4,6 +4,37 @@
   </properties>
   <meta name="keyword" content="YUI Compressor, mojo"/>
  <body>
+
+<section name="Distribution">
+<p>
+<ul>
+<li>Repository : http://oss.sonatype.org/content/groups/public (since version 0.10, available on central repository)</li>
+<li>GroupId    : ${project.groupId}   (changed between 0.7.1 and 0.9)</li>
+<li>ArtifactId : ${project.artifactId}</li>
+<li>ArtifactId : ${project.version}</li>
+</ul>
+</p>
+<source><![CDATA[
+  <pluginRepositories>
+    <pluginRepository>
+      <name>oss.sonatype.org</name>
+      <id>oss.sonatype.org</id>
+      <url>http://oss.sonatype.org/content/groups/public</url>
+    </pluginRepository>
+  </pluginRepositories>
+...
+
+      <plugin>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>${project.artifactId}</artifactId>
+        <version>${project.version}</version>
+...
+      </plugin>
+...
+]]></source>
+
+</section>
+
 <section name="Overview">
 
 <subsection name="Compression">
@@ -57,35 +88,6 @@ A sample output extract from my working project :
 </subsection>
 </section>
 
-<section name="Distribution">
-<p>
-<ul>
-<li>Repository : http://oss.sonatype.org/content/groups/public (since version 0.10, available on central repository)</li>
-<li>GroupId    : ${project.groupId}   (changed between 0.7.1 and 0.9)</li>
-<li>ArtifactId : ${project.artifactId}</li>
-<li>ArtifactId : ${project.version}</li>
-</ul>
-</p>
-<source><![CDATA[
-  <pluginRepositories>
-    <pluginRepository>
-      <name>oss.sonatype.org - github-releases</name>
-      <id>oss.sonatype.org-github-releases</id>
-      <url>http://oss.sonatype.org/content/repositories/github-releases</url>
-    </pluginRepository>
-  </pluginRepositories>
-...
-
-      <plugin>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>${project.artifactId}</artifactId>
-        <version>${project.version}</version>
-...
-      </plugin>
-...
-]]></source>
-
-</section>
 
 </body>
 </document>
