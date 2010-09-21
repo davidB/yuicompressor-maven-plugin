@@ -153,7 +153,7 @@ public class YuiCompressorMojo extends MojoSupport {
         File inFile = src.toFile();
         File outFile = src.toDestFile(suffix);
 
-        getLog().debug("only compress if input file is youger than existing output file");
+        getLog().debug("only compress if input file is younger than existing output file");
         if (!force && outFile.exists() && (outFile.lastModified() > inFile.lastModified())) {
             if (getLog().isInfoEnabled()) {
                 getLog().info("nothing to do, " + outFile + " is younger than original, use 'force' option or clean your target");
