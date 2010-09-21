@@ -74,7 +74,7 @@ public abstract class MojoSupport extends AbstractMojo {
     /**
      * [js only] Display possible errors in the code
      *
-     * @parameter expression="${maven.yuicompressor.jswarm}" default-value="true"
+     * @parameter expression="${maven.yuicompressor.jswarn}" default-value="true"
      */
     protected boolean jswarn;
 
