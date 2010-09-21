@@ -118,7 +118,23 @@ So if you want to remove file after aggregation and don't want war plugin copy t
  ]]></source>
 </p>
 </subsection>
-
+<subsection name="Adding header (copyright)">
+<p>When aggregating minified js files, the copyright headers have been stripped out which is fine because we don't want to repeat it several times in the output file.
+However it would be great to be able to insert one at beginning of output file.
+</p>
+<p>For simple cases, the maven-license-plugin is enough if you use the same header for all files but it is not enough if you want to have a different header per aggregation (different libraries with different licensing schemes).</p>
+<ol>
+<li>you put license header in its own file (ex license_js.txt)</li>
+<li>aggregate a license header to minified files.</li>
+</ol>
+<source><![CDATA[
+  <includes>
+    <include>${project.build.sourceDirectory}/../webapp/js/mylib/copyright.txt</include>
+    <include>mylib/**/*.js</include>
+  </includes>
+ ]]></source>
+</p>
+</subsection>
 </section>
 </body>
 </document>
