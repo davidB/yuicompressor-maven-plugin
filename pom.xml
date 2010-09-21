@@ -9,7 +9,7 @@
 
   <groupId>net.alchim31.maven</groupId>
   <artifactId>yuicompressor-maven-plugin</artifactId>
-  <version>0.10-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>YUI Compressor Maven Mojo</name>
