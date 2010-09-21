@@ -79,6 +79,13 @@ public abstract class MojoSupport extends AbstractMojo {
     protected boolean jswarn;
 
     /**
+     * Whether to skip execution.
+     *
+     * @parameter expression="${maven.yuicompressor.skip}" default-value="false"
+     */
+    private boolean skip;
+
+    /**
      * define if plugin must stop/fail on warnings.
      *
      * @parameter expression="${maven.yuicompressor.failOnWarning}" default-value="false"
@@ -89,6 +96,10 @@ public abstract class MojoSupport extends AbstractMojo {
     @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
+            if (skip) {
+                getLog().debug("run of yuicompressor-maven-plugin skipped");
+                return;
+            }
             if (failOnWarning) {
                 jswarn = true;
             }
