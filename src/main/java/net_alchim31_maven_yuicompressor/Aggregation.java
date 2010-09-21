@@ -22,6 +22,8 @@ public class Aggregation {
         defineInputDir();
         List<File> files = getIncludedFiles();
         if (files.size() != 0) {
+            output = output.getCanonicalFile();
+            output.getParentFile().mkdirs();
             FileOutputStream out = new FileOutputStream(output);
             try {
                 for (File file : files) {
