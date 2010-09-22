@@ -133,7 +133,7 @@ However it would be great to be able to insert one at beginning of output file.
     <include>mylib/**/*.js</include>
   </includes>
  ]]></source>
-</p>
+
 </subsection>
 </section>
 </body>

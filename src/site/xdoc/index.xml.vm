@@ -9,7 +9,7 @@
 <p>
 <ul>
 <li>Repository : http://oss.sonatype.org/content/groups/public (since version 1.0, available on central repository)</li>
-<li>GroupId    : ${project.groupId}   (changed between 0.7.1 and 0.9)</li>
+<li>GroupId    : ${project.groupId}   (changed since 0.9)</li>
 <li>ArtifactId : ${project.artifactId}</li>
 <li>ArtifactId : ${project.version}</li>
 </ul>

@@ -92,6 +92,7 @@
         <artifactId>maven-site-plugin</artifactId>
         <version>3.0-beta-2</version>
         <configuration>
+          <templateFile>${basedir}/src/site/template-site.vm</templateFile>
           <reportPlugins>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
