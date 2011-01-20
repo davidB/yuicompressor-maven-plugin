@@ -108,9 +108,9 @@ public class YuiCompressorMojo extends MojoSupport {
 
     /**
      * aggregate files before minify
-     * @parameter expression="${maven.yuicompressor.aggregateFirst}" default-value="false"
+     * @parameter expression="${maven.yuicompressor.preProcessAggregates}" default-value="false"
      */
-    private boolean aggregateFirst;
+    private boolean preProcessAggregates;
 
     private long inSizeTotal_;
     private long outSizeTotal_;
@@ -126,7 +126,7 @@ public class YuiCompressorMojo extends MojoSupport {
             suffix = "";
         }
 
-        if(aggregateFirst) aggregate();
+        if(preProcessAggregates) aggregate();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class YuiCompressorMojo extends MojoSupport {
             getLog().info(String.format("total input (%db) -> output (%db)[%d%%]", inSizeTotal_, outSizeTotal_, ((outSizeTotal_ * 100)/inSizeTotal_)));
         }
 
-        if(!aggregateFirst) aggregate();
+        if(!preProcessAggregates) aggregate();
     }
 
     private void aggregate() throws Exception {
