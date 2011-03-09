@@ -16,6 +16,7 @@ class JSLintChecker {
         InputStream in = null;
         try {
             File jslint = File.createTempFile("jslint", ".js");
+            jslint.deleteOnExit();
             in = getClass().getResourceAsStream("/jslint.js");
             out = new FileOutputStream(jslint);
             IOUtil.copy(in, out);
