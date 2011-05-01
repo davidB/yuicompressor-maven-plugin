@@ -3,6 +3,7 @@ package net_alchim31_maven_yuicompressor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
@@ -178,8 +179,7 @@ public class YuiCompressorMojo extends MojoSupport {
                 JavaScriptCompressor compressor = new JavaScriptCompressor(in, jsErrorReporter_);
                 compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
             } else if (".css".equalsIgnoreCase(src.getExtension())) {
-                CssCompressor compressor = new CssCompressor(in);
-                compressor.compress(out, linebreakpos);
+                compressCss(in, out);
             }
             getLog().debug("end compression");
         } finally {
@@ -198,6 +198,17 @@ public class YuiCompressorMojo extends MojoSupport {
             }
         }
     }
+
+	private void compressCss(InputStreamReader in, OutputStreamWriter out)
+			throws IOException {
+		try{
+		    CssCompressor compressor = new CssCompressor(in);
+		    compressor.compress(out, linebreakpos);
+		}catch(IllegalArgumentException e){
+			throw new IllegalArgumentException(
+					"Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again",e);
+		}
+	}
 
     protected File gzipIfRequested(File file) throws Exception {
         if (!gzip || (file == null) || (!file.exists())) {
