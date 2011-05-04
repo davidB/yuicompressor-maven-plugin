@@ -1,5 +1,7 @@
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.sonatype.oss</groupId>
@@ -64,12 +66,21 @@
     <maven.compiler.target>1.5</maven.compiler.target>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>rhino</groupId>
+        <artifactId>js</artifactId>
+        <version>1.7R2</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>com.yahoo.platform.yui</groupId>
       <artifactId>yuicompressor</artifactId>
-      <version>2.4.4</version>
-      <!--scope>provided</scope-->
+      <version>2.4.6</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -125,10 +136,10 @@
                 <author>true</author>
                 <keywords>true</keywords>
                 <attach>false</attach>
-          <!--
-          <doctitle>${project.name} API Reference (${project.version}, r${buildNumber})</doctitle>
-          <windowtitle>${project.name} API Reference (${project.version}, r${buildNumber})</windowtitle>
-          -->
+                <!--
+                <doctitle>${project.name} API Reference (${project.version}, r${buildNumber})</doctitle>
+                <windowtitle>${project.name} API Reference (${project.version}, r${buildNumber})</windowtitle>
+                 -->
                 <!--links>
                   <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
                   <link>http://www.slf4j.org/apidocs/</link>
@@ -139,29 +150,28 @@
                   <link>http://commons.apache.org/io/api-release/</link>
                   <link>http://testng.org/javadocs/</link>
                   <link>http://junit.sourceforge.net/javadoc/</link>
-                 </links-->
+                </links -->
                 <additionalparam>-nopackagediagram</additionalparam>
-          <!-- -sourceclasspath ${project.build.outputDirectory} -->
+                <!-- -sourceclasspath ${project.build.outputDirectory} -->
                 <excludePackageNames>${project.groupId}.example*:${project.groupId}.util.internal*</excludePackageNames>
               </configuration>
             </plugin>
-      <!--
-         <plugin>
-           <groupId>com.dzone.jdocs</groupId>
-           <artifactId>javadoc</artifactId>
-           <version>1.0</version>
-           <configuration>
-             <aggregate>true</aggregate>
-             <source>${java.src.version}</source>
-             <overview>${basedir}/src/main/java/overview.html</overview>
-           </configuration>
-         </plugin>
-         -->
+            <!--
+            <plugin>
+              <groupId>com.dzone.jdocs</groupId>
+              <artifactId>javadoc</artifactId>
+              <version>1.0</version>
+              <configuration>
+                <aggregate>true</aggregate>
+                <source>${java.src.version}</source>
+                <overview>${basedir}/src/main/java/overview.html</overview>
+              </configuration>
+            </plugin>
+            -->
             <plugin>
               <artifactId>maven-jxr-plugin</artifactId>
               <version>2.1</version>
             </plugin>
-            <!--
             <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>taglist-maven-plugin</artifactId>
@@ -193,7 +203,6 @@
                 </reportSet>
               </reportSets>
             </plugin>
-            -->
             <plugin>
               <artifactId>maven-pmd-plugin</artifactId>
               <version>2.4</version>
@@ -214,7 +223,7 @@
             </plugin>
             <plugin>
               <artifactId>maven-changes-plugin</artifactId>
-              <!--version>2.3</version-->
+              <!--version>2.3</version -->
               <version>2.1</version>
               <reportSets>
                 <reportSet>
@@ -229,7 +238,7 @@
       </plugin>
     </plugins>
   </build>
-  
+
   <profiles>
     <profile>
       <id>integration-tests</id>
