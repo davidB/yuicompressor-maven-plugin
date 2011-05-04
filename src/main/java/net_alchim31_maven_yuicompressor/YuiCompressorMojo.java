@@ -3,6 +3,7 @@ package net_alchim31_maven_yuicompressor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
@@ -106,6 +107,12 @@ public class YuiCompressorMojo extends MojoSupport {
      */
     private boolean statistics;
 
+    /**
+     * aggregate files before minify
+     * @parameter expression="${maven.yuicompressor.preProcessAggregates}" default-value="false"
+     */
+    private boolean preProcessAggregates;
+
     private long inSizeTotal_;
     private long outSizeTotal_;
 
@@ -119,6 +126,8 @@ public class YuiCompressorMojo extends MojoSupport {
         if (nosuffix) {
             suffix = "";
         }
+
+        if(preProcessAggregates) aggregate();
     }
 
     @Override
@@ -126,6 +135,11 @@ public class YuiCompressorMojo extends MojoSupport {
         if (statistics && (inSizeTotal_ > 0)) {
             getLog().info(String.format("total input (%db) -> output (%db)[%d%%]", inSizeTotal_, outSizeTotal_, ((outSizeTotal_ * 100)/inSizeTotal_)));
         }
+
+        if(!preProcessAggregates) aggregate();
+    }
+
+    private void aggregate() throws Exception {
         if (aggregations != null) {
             for(Aggregation aggregation : aggregations) {
                 getLog().info("generate aggregation : " + aggregation.output);
@@ -178,8 +192,7 @@ public class YuiCompressorMojo extends MojoSupport {
                 JavaScriptCompressor compressor = new JavaScriptCompressor(in, jsErrorReporter_);
                 compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
             } else if (".css".equalsIgnoreCase(src.getExtension())) {
-                CssCompressor compressor = new CssCompressor(in);
-                compressor.compress(out, linebreakpos);
+                compressCss(in, out);
             }
             getLog().debug("end compression");
         } finally {
@@ -198,6 +211,17 @@ public class YuiCompressorMojo extends MojoSupport {
             }
         }
     }
+
+	private void compressCss(InputStreamReader in, OutputStreamWriter out)
+			throws IOException {
+		try{
+		    CssCompressor compressor = new CssCompressor(in);
+		    compressor.compress(out, linebreakpos);
+		}catch(IllegalArgumentException e){
+			throw new IllegalArgumentException(
+					"Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again",e);
+		}
+	}
 
     protected File gzipIfRequested(File file) throws Exception {
         if (!gzip || (file == null) || (!file.exists())) {
