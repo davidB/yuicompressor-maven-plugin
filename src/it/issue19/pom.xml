@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.sandbox</groupId>
+  <artifactId>issu19</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <properties>
+    <value.rf01>rf01</value.rf01>
+    <value.rf02>rf02</value.rf02>
+  </properties>
+  <build>
+    <filters>
+      <filter>src/main/filters/dev.properties</filter>
+    </filters>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>webapp.properties</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>@project.groupId@</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <version>@project.version@</version>
+        <configuration>
+          <nosuffix>true</nosuffix>
+          <jswarn>false</jswarn>
+        </configuration>
+        <executions>
+          <execution>
+            <id>compress-js-css</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
