@@ -63,6 +63,12 @@ public abstract class MojoSupport extends AbstractMojo {
      */
     private List<String> excludes;
 
+    /**
+     * Excludes files from resources directories.
+     *
+     * @parameter default-value="false"
+     */
+    private boolean excludeResources = false;
 
     /**
      * @parameter expression="${project}"
@@ -106,12 +112,14 @@ public abstract class MojoSupport extends AbstractMojo {
             jsErrorReporter_ = new ErrorReporter4Mojo(getLog(), jswarn);
             beforeProcess();
             processDir(sourceDirectory, outputDirectory, null, null, true);
-            for (Resource resource : resources){
-                File destRoot = outputDirectory;
-                if (resource.getTargetPath() != null) {
-                    destRoot = new File(outputDirectory, resource.getTargetPath());
-                }
-                processDir(new File( resource.getDirectory() ), destRoot, resource.getIncludes(), resource.getExcludes(), true);
+            if (!excludeResources) {
+              for (Resource resource : resources){
+                  File destRoot = outputDirectory;
+                  if (resource.getTargetPath() != null) {
+                      destRoot = new File(outputDirectory, resource.getTargetPath());
+                  }
+                  processDir(new File( resource.getDirectory() ), destRoot, resource.getIncludes(), resource.getExcludes(), true);
+              }
             }
             processDir(warSourceDirectory, webappDirectory, null, null, false);
             afterProcess();
