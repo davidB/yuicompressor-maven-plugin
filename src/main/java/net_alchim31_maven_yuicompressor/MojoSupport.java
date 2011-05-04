@@ -111,17 +111,17 @@ public abstract class MojoSupport extends AbstractMojo {
             }
             jsErrorReporter_ = new ErrorReporter4Mojo(getLog(), jswarn);
             beforeProcess();
-            processDir(sourceDirectory, outputDirectory, null, null, true);
+            processDir(sourceDirectory, outputDirectory, null, true);
             if (!excludeResources) {
               for (Resource resource : resources){
                   File destRoot = outputDirectory;
                   if (resource.getTargetPath() != null) {
                       destRoot = new File(outputDirectory, resource.getTargetPath());
                   }
-                  processDir(new File( resource.getDirectory() ), destRoot, resource.getIncludes(), resource.getExcludes(), true);
+                  processDir(new File( resource.getDirectory() ), destRoot, resource.getExcludes(), true);
               }
             }
-            processDir(warSourceDirectory, webappDirectory, null, null, false);
+            processDir(warSourceDirectory, webappDirectory, null, false);
             afterProcess();
             getLog().info(String.format("nb warnings: %d, nb errors: %d", jsErrorReporter_.getWarningCnt(), jsErrorReporter_.getErrorCnt()));
             if (failOnWarning && (jsErrorReporter_.getWarningCnt() > 0)) {
@@ -142,7 +142,11 @@ public abstract class MojoSupport extends AbstractMojo {
     protected abstract void beforeProcess() throws Exception;
     protected abstract void afterProcess() throws Exception;
 
-    protected void processDir(File srcRoot, File destRoot, List<String> srcIncludes, List<String> srcExcludes, boolean destAsSource) throws Exception {
+    /**
+     * Force to use defaultIncludes (ignore srcIncludes) to avoid processing resources/includes from other type than *.css or *.js
+     * @see https://github.com/davidB/yuicompressor-maven-plugin/issues/19 
+     */
+    protected void processDir(File srcRoot, File destRoot, List<String> srcExcludes, boolean destAsSource) throws Exception {
         if ((srcRoot == null) || ( !srcRoot.exists() )) {
             return;
         }
@@ -151,11 +155,7 @@ public abstract class MojoSupport extends AbstractMojo {
         }
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(srcRoot);
-        if ( (srcIncludes != null) && !srcIncludes.isEmpty() ) {
-            scanner.setIncludes( srcIncludes.toArray( EMPTY_STRING_ARRAY ) );
-        } else {
-            scanner.setIncludes(getDefaultIncludes());
-        }
+        scanner.setIncludes(getDefaultIncludes());
         if ( (srcExcludes != null) && !srcExcludes.isEmpty() ) {
             scanner.setExcludes( srcExcludes.toArray( EMPTY_STRING_ARRAY ) );
         }

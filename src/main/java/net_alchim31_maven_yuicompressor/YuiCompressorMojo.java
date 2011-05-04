@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -157,15 +156,6 @@ public class YuiCompressorMojo extends MojoSupport {
                 }
             }
         }
-    }
-    
-    /**
-     * Force to use defaultIncludes (ignore srcIncludes) to avoid processing resources/includes from other type than *.css or *.js
-     * @see https://github.com/davidB/yuicompressor-maven-plugin/issues/19 
-     */
-    @Override
-    protected void processDir(File srcRoot, File destRoot, List<String> srcIncludes, List<String> srcExcludes, boolean destAsSource) throws Exception {
-      super.processDir(srcRoot, destRoot, null, srcExcludes, destAsSource);
     }
 
     @Override
