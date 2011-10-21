@@ -57,12 +57,26 @@ public abstract class MojoSupport extends AbstractMojo {
     private List<Resource> resources;
 
     /**
-     * list of additionnal excludes
+     * list of additional excludes
      *
      * @parameter
      */
     private List<String> excludes;
 
+    /**
+     * list of additional includes
+     * 
+     * @parameter
+     */
+    private List<String> includes;
+    
+    /**
+     * Excludes files from webapp directory
+     * 
+     * @parameter
+     */
+    private boolean excludeWarSourceDirectory = false;
+    
     /**
      * Excludes files from resources directories.
      *
@@ -121,7 +135,9 @@ public abstract class MojoSupport extends AbstractMojo {
                   processDir(new File( resource.getDirectory() ), destRoot, resource.getExcludes(), true);
               }
             }
-            processDir(warSourceDirectory, webappDirectory, null, false);
+            if (!excludeWarSourceDirectory) {
+            	processDir(warSourceDirectory, webappDirectory, null, false);
+            }
             afterProcess();
             getLog().info(String.format("nb warnings: %d, nb errors: %d", jsErrorReporter_.getWarningCnt(), jsErrorReporter_.getErrorCnt()));
             if (failOnWarning && (jsErrorReporter_.getWarningCnt() > 0)) {
@@ -155,7 +171,13 @@ public abstract class MojoSupport extends AbstractMojo {
         }
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(srcRoot);
-        scanner.setIncludes(getDefaultIncludes());
+        
+        if (includes == null) {
+        	scanner.setIncludes(getDefaultIncludes());
+        } else {
+        	scanner.setIncludes(includes.toArray(new String[0]));
+        }
+        
         if ( (srcExcludes != null) && !srcExcludes.isEmpty() ) {
             scanner.setExcludes( srcExcludes.toArray( EMPTY_STRING_ARRAY ) );
         }

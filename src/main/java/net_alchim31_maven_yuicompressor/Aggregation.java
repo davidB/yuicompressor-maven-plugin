@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
@@ -17,6 +17,7 @@ public class Aggregation {
     public String[] excludes;
     public boolean removeIncluded = false;
     public boolean insertNewLine = false;
+    public boolean fixLastSemicolon = false;
     
     public void run() throws Exception {
         defineInputDir();
@@ -33,6 +34,9 @@ public class Aggregation {
                     FileInputStream in = new FileInputStream(file);
                     try {
                         IOUtil.copy(in, out);
+                        if (fixLastSemicolon) {
+                        	out.write(';');
+                        }
                         if (insertNewLine) {
                             out.write('\n');
                         }
