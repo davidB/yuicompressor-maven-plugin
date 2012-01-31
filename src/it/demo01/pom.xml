@@ -57,6 +57,7 @@
         </executions>
         <configuration>
           <nosuffix>true</nosuffix>
+          <nocompress>false</nocompress>
           <!--nomunge>true</nomunge-->
           <force>true</force>
           <gzip>true</gzip>
