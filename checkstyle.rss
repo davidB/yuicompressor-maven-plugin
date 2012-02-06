@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>YUI Compressor Maven Mojo - Checkstyle report</title>
+    <link>http://github.com/davidB/yuicompressor-maven-plugin</link>
+    <description>YUI Compressor Maven Mojo - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2010 - 2012 Alchim31</copyright>
+    <item>
+      <title>File: 8,
+             Errors: 208,
+             Warnings: 0,
+             Infos: 0
+      </title>
+            <link>http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.JSLintChecker.java">net_alchim31_maven_yuicompressor/JSLintChecker.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.ErrorReporter4Mojo.java">net_alchim31_maven_yuicompressor/ErrorReporter4Mojo.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  58
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.BasicRhinoShell.java">net_alchim31_maven_yuicompressor/BasicRhinoShell.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  14
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.SourceFile.java">net_alchim31_maven_yuicompressor/SourceFile.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  27
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.JSLintMojo.java">net_alchim31_maven_yuicompressor/JSLintMojo.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.MojoSupport.java">net_alchim31_maven_yuicompressor/MojoSupport.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  24
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.Aggregation.java">net_alchim31_maven_yuicompressor/Aggregation.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  30
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://github.com/davidB/yuicompressor-maven-plugin/checkstyle.html#net_alchim31_maven_yuicompressor.YuiCompressorMojo.java">net_alchim31_maven_yuicompressor/YuiCompressorMojo.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  43
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+

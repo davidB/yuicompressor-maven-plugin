@@ -13,7 +13,7 @@
       <meta name="author" content="David Bernard" />
     <meta name="Date-Revision-yyyymmdd" content="20120206" />
     <meta http-equiv="Content-Language" content="en" />
-        <meta name="keyword" content="YUI Compressor, mojo" />
+        
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
@@ -59,8 +59,8 @@
                                 <h5>Overview</h5>
                   <ul>
                   <li class="none">
-            <strong>Introduction</strong>
-          </li>
+                          <a href="index.html" title="Introduction">Introduction</a>
+            </li>
                   <li class="none">
                           <a href="index.html#Distribution" title="Distribution">Distribution</a>
             </li>
@@ -68,8 +68,8 @@
                           <a href="plugin-info.html" title="Goals">Goals</a>
             </li>
                   <li class="none">
-                          <a href="usage_compress.html" title="Usage: compress">Usage: compress</a>
-            </li>
+            <strong>Usage: compress</strong>
+          </li>
                   <li class="none">
                           <a href="usage_jslint.html" title="Usage: jslint">Usage: jslint</a>
             </li>
@@ -100,44 +100,9 @@
           </ul>
                        <h5>Project Documentation</h5>
                   <ul>
-                                                                                                                                                                                                                                                                  <li class="expanded">
+                                                                                                                                                                                                                                                        <li class="collapsed">
                           <a href="project-info.html" title="Project Information">Project Information</a>
-                    <ul>
-                      <li class="none">
-            <strong>About</strong>
-          </li>
-                      <li class="none">
-                          <a href="integration.html" title="Continuous Integration">Continuous Integration</a>
-            </li>
-                      <li class="none">
-                          <a href="dependencies.html" title="Dependencies">Dependencies</a>
-            </li>
-                      <li class="none">
-                          <a href="issue-tracking.html" title="Issue Tracking">Issue Tracking</a>
-            </li>
-                      <li class="none">
-                          <a href="mail-lists.html" title="Mailing Lists">Mailing Lists</a>
-            </li>
-                      <li class="none">
-                          <a href="plugin-management.html" title="Plugin Management">Plugin Management</a>
-            </li>
-                      <li class="none">
-                          <a href="license.html" title="Project License">Project License</a>
-            </li>
-                      <li class="none">
-                          <a href="plugins.html" title="Project Plugins">Project Plugins</a>
-            </li>
-                      <li class="none">
-                          <a href="project-summary.html" title="Project Summary">Project Summary</a>
-            </li>
-                      <li class="none">
-                          <a href="team-list.html" title="Project Team">Project Team</a>
-            </li>
-                      <li class="none">
-                          <a href="source-repository.html" title="Source Repository">Source Repository</a>
-            </li>
-              </ul>
-        </li>
+                  </li>
                                                                                                                                                                                                                                       <li class="collapsed">
                           <a href="project-reports.html" title="Project Reports">Project Reports</a>
                   </li>
@@ -159,91 +124,116 @@
       <div id="contentBox">
         
 
+ <div class="section"><h2>Usage<a name="Usage"></a></h2>
+ 
+ <div class="section"><h3>Without pom.xml change<a name="Without_pom.xml_change"></a></h3>
+<p>To Compress every js and css files :
+ </p><div class="source"><pre>
+ $&gt; mvn net.alchim31.maven:yuicompressor-maven-plugin:compress
+ </pre></div>
+ with the -X option compressed file are listed.
 
-<div class="section"><h2>Distribution<a name="Distribution"></a></h2>
-<p>
-</p><ul>
-<li>Repository : http://oss.sonatype.org/content/groups/public (since version 1.0, available on central repository)</li>
-<li>GroupId    : net.alchim31.maven   (changed since 0.9)</li>
-<li>ArtifactId : yuicompressor-maven-plugin</li>
-<li>ArtifactId : 1.3.0</li>
-</ul>
 
-<div class="source"><pre>
-  &lt;pluginRepositories&gt;
-    &lt;pluginRepository&gt;
-      &lt;name&gt;oss.sonatype.org&lt;/name&gt;
-      &lt;id&gt;oss.sonatype.org&lt;/id&gt;
-      &lt;url&gt;http://oss.sonatype.org/content/groups/public&lt;/url&gt;
-    &lt;/pluginRepository&gt;
-  &lt;/pluginRepositories&gt;
+<p>To force compress every js and css files and fail if warning :
+ </p><div class="source"><pre>
+ $&gt; mvn net.alchim31.maven:yuicompressor-maven-plugin:compress \
+     -Dmaven.yuicompressor.force=true \
+     -Dmaven.yuicompressor.failOnWarning=true \
+ </pre></div>
+
+ </div>
+
+
+ 
+ <div class="section"><h3>With pom.xml change<a name="With_pom.xml_change"></a></h3>
+<p>To Compress every js and css files at process-resources phase (before compile) :
+</p><div class="source"><pre>
+&lt;project&gt;
 ...
-
+  &lt;build&gt;
+    &lt;plugins&gt;
+...
       &lt;plugin&gt;
         &lt;groupId&gt;net.alchim31.maven&lt;/groupId&gt;
         &lt;artifactId&gt;yuicompressor-maven-plugin&lt;/artifactId&gt;
-        &lt;version&gt;1.3.0&lt;/version&gt;
-...
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;compress&lt;/goal&gt;
+            &lt;/goals&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;        
       &lt;/plugin&gt;
 ...
-</pre></div>
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+...
+&lt;/project&gt;
+ </pre></div>
 
-</div>
 
-<div class="section"><h2>Overview<a name="Overview"></a></h2>
-
-<div class="section"><h3>Compression<a name="Compression"></a></h3>
- <p>Compress (Minify + Ofuscate) Javascript files and CSS files
-  using <a class="externalLink" href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a> from Julien Lecomte.
-  Because Javascript compression could need time and resource, and to avoid repetitive (stupid) resources consumming at runtime, this plugin do compression of static files at compile time .
-</p><ul>
- <li>Compression is applied on webapp dir (src/main/webapp) and on resources (usefull for framework like <a class="externalLink" href="http://wicket.apache.org/">Wicket</a> where js and css could be in jar).</li>
- <li>Compressed Files are renamed with a suffix (default &quot;-min&quot;), so both version are available (compressed and original) in the targeting application, but if you don't want to keep original and want to overwrite it set option 'nosuffix' to 'true'.</li>
- <li>there are other options see <a href="plugin-info.html">details</a>.</li>
- </ul>
- 
-</div>
-
-<div class="section"><h3>Check<a name="Check"></a></h3>
-<p>Check Javascript file with <a class="externalLink" href="http://jslint.com">jslint</a></p>
-</div>
-
-<div class="section"><h3>Sample Output<a name="Sample_Output"></a></h3>
-<p>
-A sample output extract from my working project :
+<p>To Compress every js and css files but without renaming with suffix :
 </p><div class="source"><pre>
-[INFO] [yuicompressor:compress]
-[INFO] uni-form-generic.css (4902b) -&gt; uni-form-generic-min.css (1625b)[33%]
-[INFO] uni-form.css (8431b) -&gt; uni-form-min.css (3435b)[40%]
-[WARNING] .../src/main/webapp/static/uni-form/js/highlighter.js:line -1:column -1:Found an undeclared symbol: i
-        Highlighter.settings.field_class);for(i ---&gt; = &lt;--- 0;i&lt;fields.length;i
-[INFO] highlighter.js (3213b) -&gt; highlighter-min.js (1625b)[50%]
-[WARNING] .../src/main/webapp/static/uni-form/js/uni-form.jquery.js:line -1:column -1:Found an undeclared symbol: $
-        ;});});};$ ---&gt; ( &lt;--- document).ready(function (){
-[INFO] uni-form.jquery.js (1261b) -&gt; uni-form.jquery-min.js (674b)[53%]
-[INFO] style.css (11620b) -&gt; style-min.css (8474b)[72%]
-[INFO] buttons.css (2513b) -&gt; buttons-min.css (1227b)[48%]
-[INFO] grid.css (5012b) -&gt; grid-min.css (2003b)[39%]
-[INFO] reset.css (1164b) -&gt; reset-min.css (642b)[55%]
-[INFO] typography.css (5136b) -&gt; typography-min.css (1800b)[35%]
-[INFO] print.css (1568b) -&gt; print-min.css (631b)[40%]
-[INFO] screen.css (1035b) -&gt; screen-min.css (103b)[9%]
-[INFO] navbar.css (653b) -&gt; navbar-min.css (460b)[70%]
-[INFO] total input (46508b) -&gt; output (22699b)[48%]
-[INFO] nb warnings: 2, nb errors: 0
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESSFUL
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time: 1 second
-[INFO] Finished at: Tue Aug 28 23:40:57 CEST 2007
-[INFO] Final Memory: 12M/21M
-[INFO] ------------------------------------------------------------------------
-</pre></div>
+&lt;project&gt;
+...
+  &lt;build&gt;
+    &lt;plugins&gt;
+...
+      &lt;plugin&gt;
+        &lt;groupId&gt;net.alchim31.maven&lt;/groupId&gt;
+        &lt;artifactId&gt;yuicompressor-maven-plugin&lt;/artifactId&gt;
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;compress&lt;/goal&gt;
+            &lt;/goals&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;        
+        &lt;configuration&gt;
+          &lt;nosuffix&gt;true&lt;/nosuffix&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+...
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+...
+&lt;/project&gt;
+ </pre></div>
+
+
+<p>To Compress every js and css files except already compressed files like *.pack.js files and compressed.css :
+</p><div class="source"><pre>
+&lt;project&gt;
+...
+  &lt;build&gt;
+    &lt;plugins&gt;
+...
+      &lt;plugin&gt;
+        &lt;groupId&gt;net.alchim31.maven&lt;/groupId&gt;
+        &lt;artifactId&gt;yuicompressor-maven-plugin&lt;/artifactId&gt;
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;compress&lt;/goal&gt;
+            &lt;/goals&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;        
+        &lt;configuration&gt;
+          &lt;excludes&gt;
+            &lt;exclude&gt;**/*.pack.js&lt;/exclude&gt;
+            &lt;exclude&gt;**/compressed.css&lt;/exclude&gt;
+          &lt;/excludes&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+...
+    &lt;/plugins&gt;
+  &lt;/build&gt;
+...
+&lt;/project&gt;
+ </pre></div>
 
 </div>
 </div>
-
-
 
 
       </div>

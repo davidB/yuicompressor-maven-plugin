@@ -1,0 +1,32 @@
+-breakiterator
+-classpath
+'/home/dwayne/work/oss/yuicompressor-maven-plugin/target/checkout/target/classes:/home/dwayne/.m2/repository/org/apache/maven/maven-profile/2.0.9/maven-profile-2.0.9.jar:/home/dwayne/.m2/repository/rhino/js/1.6R7/js-1.6R7.jar:/home/dwayne/.m2/repository/org/codehaus/plexus/plexus-container-default/1.0-alpha-9-stable-1/plexus-container-default-1.0-alpha-9-stable-1.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-repository-metadata/2.0.9/maven-repository-metadata-2.0.9.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-artifact-manager/2.0.9/maven-artifact-manager-2.0.9.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-plugin-registry/2.0.9/maven-plugin-registry-2.0.9.jar:/home/dwayne/.m2/repository/com/yahoo/platform/yui/yuicompressor/2.4.6/yuicompressor-2.4.6.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-project/2.0.9/maven-project-2.0.9.jar:/home/dwayne/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-settings/2.0.9/maven-settings-2.0.9.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-plugin-api/2.0.9/maven-plugin-api-2.0.9.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-artifact/2.0.9/maven-artifact-2.0.9.jar:/home/dwayne/.m2/repository/org/apache/maven/wagon/wagon-provider-api/1.0-beta-2/wagon-provider-api-1.0-beta-2.jar:/home/dwayne/.m2/repository/classworlds/classworlds/1.1-alpha-2/classworlds-1.1-alpha-2.jar:/home/dwayne/.m2/repository/org/codehaus/plexus/plexus-utils/1.5.1/plexus-utils-1.5.1.jar:/home/dwayne/.m2/repository/org/apache/maven/maven-model/2.0.9/maven-model-2.0.9.jar'
+-doclet
+'org.jboss.apiviz.APIviz'
+-docletpath
+'/home/dwayne/.m2/repository/org/jboss/apiviz/apiviz/1.3.0.GA/apiviz-1.3.0.GA.jar:/home/dwayne/.m2/repository/jdepend/jdepend/2.9.1/jdepend-2.9.1.jar:/home/dwayne/bin/soft-linux-x86-64/jdk1.6.0_23/jre/../lib/tools.jar:/home/dwayne/.m2/repository/junit/junit/4.4/junit-4.4.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'/home/dwayne/work/oss/yuicompressor-maven-plugin/target/checkout/src/main/java'
+-nopackagediagram
+-author
+-bottom
+'Copyright &#169; 2010-2012 <a href="http://alchim31.net/">Alchim31</a>. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'/home/dwayne/work/oss/yuicompressor-maven-plugin/target/checkout/target/site/apidocs'
+-docencoding
+'UTF-8'
+-docfilessubdirs
+-doctitle
+'YUI Compressor Maven Mojo 1.3.0 API'
+-keywords
+-link
+'http://java.sun.com/javase/6/docs/api'
+-use
+-version
+-windowtitle
+'YUI Compressor Maven Mojo 1.3.0 API'
