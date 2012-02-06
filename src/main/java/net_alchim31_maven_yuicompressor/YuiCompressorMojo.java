@@ -56,6 +56,13 @@ public class YuiCompressorMojo extends MojoSupport {
     private int linebreakpos;
 
     /**
+     * [js only] No compression
+     *
+     * @parameter expression="${maven.yuicompressor.nocompress}" default-value="false"
+     */
+    private boolean nocompress;
+
+    /**
      * [js only] Minify only, do not obfuscate.
      *
      * @parameter expression="${maven.yuicompressor.nomunge}" default-value="false"
@@ -187,7 +194,11 @@ public class YuiCompressorMojo extends MojoSupport {
 
             getLog().debug("start compression");
             out = new OutputStreamWriter(new FileOutputStream(outFileTmp), encoding);
-            if (".js".equalsIgnoreCase(src.getExtension())) {
+            if (nocompress) {
+                getLog().info("No compression is enabled");
+                IOUtil.copy(in, out);
+            }
+            else if (".js".equalsIgnoreCase(src.getExtension())) {
                 JavaScriptCompressor compressor = new JavaScriptCompressor(in, jsErrorReporter_);
                 compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
             } else if (".css".equalsIgnoreCase(src.getExtension())) {
