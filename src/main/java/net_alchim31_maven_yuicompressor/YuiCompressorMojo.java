@@ -23,6 +23,7 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
  *
  * @author David Bernard
  * @created 2007-08-28
+ * @threadSafe
  */
 // @SuppressWarnings("unchecked")
 public class YuiCompressorMojo extends MojoSupport {
