@@ -17,6 +17,7 @@ syntax: glob
 *.iml
 *.iws
 *.ipr
+.idea
 
 # building
 target
