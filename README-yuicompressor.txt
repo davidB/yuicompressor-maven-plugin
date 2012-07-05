@@ -16,7 +16,8 @@ SYNOPSIS
     --charset <charset>       Read the input file using <charset>
     --line-break <column>     Insert a line break after the specified column number
     -v, --verbose             Display informational messages and warnings
-    -o <file>                 Place the output into <file>. Defaults to stdout.
+    -o <file>                 Place the output into <file> or a file pattern.
+                              Defaults to stdout.
 
   JavaScript Options
     --nomunge                 Minify only, do not obfuscate
@@ -60,8 +61,13 @@ GLOBAL OPTIONS
       the same character set.
 
   -o outfile
+
       Place output in file outfile. If not specified, the YUI Compressor will
       default to the standard output, which you can redirect to a file.
+      Supports a filter syntax for expressing the output pattern when there are
+      multiple input files.  ex:
+          java -jar yuicompressor.jar -o '.css$:-min.css' *.css
+      ... will minify all .css files and save them as -min.css
 
   -v, --verbose
       Display informational messages and warnings.
@@ -83,7 +89,9 @@ NOTES
 
   + If no input file is specified, it defaults to stdin.
 
-  + The YUI Compressor requires Java version >= 1.4.
+  + Supports wildcards for specifying multiple input files.
+
+  + The YUI Compressor requires Java version >= 1.5.
 
   + It is possible to prevent a local variable, nested function or function
     argument from being obfuscated by using "hints". A hint is a string that
@@ -122,14 +130,16 @@ NOTES
      * Copyright 2001 Robert Penner All rights reserved.
      */
 
-AUTHOR
+MODIFIED RHINO FILES
 
-  The YUI Compressor was written and is maintained by:
-      Julien Lecomte <jlecomte@yahoo-inc.com>
-  The CSS portion is a port of Isaac Schlueter's cssmin utility.
+  YUI Compressor uses a modified version of the Rhino library
+  (http://www.mozilla.org/rhino/) The changes were made to support
+  JScript conditional comments, preserved comments, unescaped slash
+  characters in regular expressions, and to allow for the optimization
+  of escaped quotes in string literals.
 
-COPYRIGHT
+COPYRIGHT AND LICENSE
 
-  Copyright (c) 2007, Yahoo! Inc. All rights reserved.
-  Code licensed under the BSD License:
-      http://developer.yahoo.net/yui/license.txt
+  Copyright (c) 2011 Yahoo! Inc.  All rights reserved.
+  The copyrights embodied in the content of this file are licensed
+  by Yahoo! Inc. under the BSD (revised) open source license.
