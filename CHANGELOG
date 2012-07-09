@@ -6,4 +6,15 @@
     + Handle data urls without blowing up Java memory (regex)
     + Updated docs to reflect Java >= 1.5 required for CssCompressor
     + Fixed issue where we were breaking #AABBCC id selectors, with the #AABBCC -> #ABC color compression.
+
++ Changed default value for linebreakpos to -1, as currently default 0 have a special meaning (Fixed #31)
+
+        YUI Compressor README:
+        Some source control tools don't like files containing lines longer than,
+        say 8000 characters. The linebreak option is used in that case to split
+        long lines after a specific column. It can also be used to make the code
+        more readable, easier to debug (especially with the MS Script Debugger)
+        Specify 0 to get a line break after each semi-colon in JavaScript, and
+        after each rule in CSS.
+
 + Added detailed CHANGELOG

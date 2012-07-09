@@ -52,7 +52,7 @@ public class YuiCompressorMojo extends MojoSupport {
     /**
      * Insert line breaks in output after the specified column number.
      *
-     * @parameter expression="${maven.yuicompressor.linebreakpos}" default-value="0"
+     * @parameter expression="${maven.yuicompressor.linebreakpos}" default-value="-1"
      */
     private int linebreakpos;
 
