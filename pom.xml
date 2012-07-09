@@ -280,6 +280,8 @@
             <artifactId>maven-invoker-plugin</artifactId>
             <version>1.5</version>
             <configuration>
+              <!-- debugging -->
+              <!--<mavenOpts>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y</mavenOpts>-->
               <debug>false</debug>
               <streamLogs>true</streamLogs>
               <projectsDirectory>src/it</projectsDirectory>
