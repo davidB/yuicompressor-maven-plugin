@@ -67,9 +67,8 @@
           </excludes>
           <aggregations>
             <aggregation>
-              <!-- remove files after aggregation (default: false)
-                                   <removeIncluded>true</removeIncluded>
-                               -->
+              <!-- remove files after aggregation (default: false) -->
+              <!--<removeIncluded>true</removeIncluded>-->
               <!-- insert new line after each concatenation (default: false) -->
               <insertNewLine>true</insertNewLine>
               <output>${project.build.directory}/${project.build.finalName}/static/all.js</output>
