@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.sonatype.oss</groupId>
@@ -48,12 +49,22 @@
     <developer>
       <id>david.bernard</id>
       <name>David Bernard</name>
-      <timezone>GMT+1</timezone>
+      <timezone>+1</timezone>
       <roles>
         <role>Developer</role>
       </roles>
     </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Piotr Kuczynski</name>
+      <email>piotr.kuczynski@gmail.com</email>
+      <roles>
+        <role>Contributor</role>
+      </roles>
+      <timezone>+1</timezone>
+    </contributor>
+  </contributors>
 
   <properties>
     <maven.version>2.2.1</maven.version>
@@ -166,9 +177,9 @@
                 <keywords>true</keywords>
                 <attach>false</attach>
                 <!--
-                <doctitle>${project.name} API Reference (${project.version}, r${buildNumber})</doctitle>
-                <windowtitle>${project.name} API Reference (${project.version}, r${buildNumber})</windowtitle>
-                 -->
+               <doctitle>${project.name} API Reference (${project.version}, r${buildNumber})</doctitle>
+               <windowtitle>${project.name} API Reference (${project.version}, r${buildNumber})</windowtitle>
+                -->
                 <links>
                   <link>http://java.sun.com/j2se/${maven.compiler.source}/docs/api/</link>
                   <link>http://slf4j.org/api/</link>
@@ -183,7 +194,8 @@
                 <additionalparam>-nopackagediagram</additionalparam>
                 <additionalparam>-sourceclasspath ${project.build.outputDirectory}</additionalparam>
                 <!-- -sourceclasspath ${project.build.outputDirectory} -->
-                <excludePackageNames>${project.groupId}.example*:${project.groupId}.util.internal*</excludePackageNames>
+                <excludePackageNames>${project.groupId}.example*:${project.groupId}.util.internal*
+                </excludePackageNames>
               </configuration>
             </plugin>
             <!--
@@ -280,6 +292,8 @@
             <artifactId>maven-invoker-plugin</artifactId>
             <version>1.5</version>
             <configuration>
+              <!-- debugging -->
+              <!--<mavenOpts>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y</mavenOpts>-->
               <debug>false</debug>
               <streamLogs>true</streamLogs>
               <projectsDirectory>src/it</projectsDirectory>
@@ -312,7 +326,7 @@
       </activation>
       <build>
         <plugins>
-         <plugin>
+          <plugin>
             <artifactId>maven-site-plugin</artifactId>
           </plugin>
           <plugin>
