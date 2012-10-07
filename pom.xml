@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
-    <version>5</version>
+    <version>7</version>
   </parent>
 
   <groupId>net.alchim31.maven</groupId>
@@ -14,12 +14,19 @@
   <name>YUI Compressor Maven Mojo</name>
   <url>http://github.com/davidB/${project.artifactId}</url>
   <inceptionYear>2012</inceptionYear>
-
   <description>
     To compress (Minify + Ofuscate) Javascript files and CSS
     files (using YUI Compressor from Julien Lecomte) and/or to check
     Javascript files with jslint.
   </description>
+
+  <licenses>
+    <license>
+      <name>Public domain (Unlicense)</name>
+      <url>http://unlicense.org/</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <scm>
     <connection>scm:git:git://github.com/davidB/${project.artifactId}.git</connection>
@@ -29,21 +36,9 @@
 
   <issueManagement>
     <system>github</system>
-    <url>http://github.com/davidB/yuicompressor-maven-plugin/issues#issue/</url>
+    <url>http://github.com/davidB/${project.artifactId}/issues#issue/</url>
   </issueManagement>
 
-  <licenses>
-    <license>
-      <name>Creative Commons GNU LGPL, Version 2.1</name>
-      <url>http://creativecommons.org/licenses/LGPL/2.1/</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <organization>
-    <name>Alchim31</name>
-    <url>http://alchim31.net/</url>
-  </organization>
   <developers>
     <developer>
       <id>david.bernard</id>
@@ -54,6 +49,7 @@
       </roles>
     </developer>
   </developers>
+
   <contributors>
     <contributor>
       <name>Piotr Kuczynski</name>
@@ -66,13 +62,17 @@
   </contributors>
 
   <properties>
-    <maven.version>2.2.1</maven.version>
+    <maven.version>3.0.4</maven.version>
     <runtime.log>target/velocity.log</runtime.log>
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
   </properties>
+
+  <prerequisites>
+    <maven>${maven.version}</maven>
+  </prerequisites>
 
   <!-- dependencyManagement>
     <dependencies>
@@ -93,14 +93,20 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>2.0.9</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
-      <version>2.0.9</version>
+      <artifactId>maven-core</artifactId>
+      <version>${maven.version}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -110,32 +116,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-changes-plugin</artifactId>
-          <version>2.3</version>
-        </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-docck-plugin</artifactId>
-                    <versionRange>[1.0,)</versionRange>
-                    <goals>
-                      <goal>check</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
+          <version>2.6</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -143,7 +124,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
-        <version>3.0-beta-2</version>
+        <version>3.0</version>
         <configuration>
           <templateFile>${basedir}/src/site/template-site.vm</templateFile>
           <reportPlugins>
@@ -156,7 +137,6 @@
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-project-info-reports-plugin</artifactId>
               <version>2.2</version>
-              <inherited>false</inherited>
             </plugin>
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -190,8 +170,8 @@
                   <link>http://testng.org/javadocs/</link>
                   <link>http://junit.sourceforge.net/javadoc/</link>
                 </links>
-                <additionalparam>-nopackagediagram</additionalparam>
-                <additionalparam>-sourceclasspath ${project.build.outputDirectory}</additionalparam>
+                <!-- additionalparam>-nopackagediagram</additionalparam-->
+                <!-- additionalparam>-sourceclasspath ${project.build.outputDirectory}</additionalparam-->
                 <!-- -sourceclasspath ${project.build.outputDirectory} -->
                 <excludePackageNames>${project.groupId}.example*:${project.groupId}.util.internal*</excludePackageNames>
               </configuration>
@@ -243,7 +223,7 @@
         <!-- make sure our code doesn't have 1.6 dependencies except where we know it see * http://mojo.codehaus.org/animal-sniffer/index.html * http://weblogs.java.net/blog/kohsuke/archive/2008/11/compiling_with.html -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
-        <version>1.5</version>
+        <version>1.7</version>
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
@@ -266,7 +246,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
-        <version>2.1</version>
+        <version>2.2.2</version>
         <configuration>
           <releaseProfiles>release</releaseProfiles>
           <goals>install animal-sniffer:check deploy site assembly:assembly</goals>
