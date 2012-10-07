@@ -8,7 +8,7 @@
 
   <groupId>net.alchim31.maven</groupId>
   <artifactId>yuicompressor-maven-plugin</artifactId>
-  <version>1.3.3-SNAPSHOT</version>
+  <version>1.3.2-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>YUI Compressor Maven Mojo</name>
@@ -64,8 +64,8 @@
   <properties>
     <maven.version>3.0.4</maven.version>
     <runtime.log>target/velocity.log</runtime.log>
-    <maven.compiler.source>1.5</maven.compiler.source>
-    <maven.compiler.target>1.5</maven.compiler.target>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <project.build.sourceEncoding>${encoding}</project.build.sourceEncoding>
   </properties>
@@ -162,12 +162,8 @@
                 <links>
                   <link>http://java.sun.com/j2se/${maven.compiler.source}/docs/api/</link>
                   <link>http://slf4j.org/api/</link>
-                  <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-                  <link>http://logging.apache.org/log4j/docs/api/</link>
-                  <link>http://people.apache.org/~tobrien/wicket/apidocs/</link>
                   <link>http://commons.apache.org/lang/api-release/</link>
                   <link>http://commons.apache.org/io/api-release/</link>
-                  <link>http://testng.org/javadocs/</link>
                   <link>http://junit.sourceforge.net/javadoc/</link>
                 </links>
                 <!-- additionalparam>-nopackagediagram</additionalparam-->
@@ -249,7 +245,7 @@
         <version>2.2.2</version>
         <configuration>
           <releaseProfiles>release</releaseProfiles>
-          <goals>install animal-sniffer:check deploy site assembly:assembly</goals>
+          <goals>install animal-sniffer:check deploy site</goals>
         </configuration>
       </plugin>
     </plugins>
