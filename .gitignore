@@ -39,3 +39,5 @@ build.log
 #  ^\.pc/
 
 
+/pom.xml.releaseBackup
+/release.properties
