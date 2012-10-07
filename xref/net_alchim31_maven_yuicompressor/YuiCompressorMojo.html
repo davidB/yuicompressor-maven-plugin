@@ -1,276 +1,277 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <title>YuiCompressorMojo xref</title>
 <link type="text/css" rel="stylesheet" href="../stylesheet.css" />
 </head>
 <body>
 <div id="overview"><a href="../../apidocs/net_alchim31_maven_yuicompressor/YuiCompressorMojo.html">View Javadoc</a></div><pre>
 
-<a name="1" href="#1">1</a>   <strong class="jxr_keyword">package</strong> net_alchim31_maven_yuicompressor;
-<a name="2" href="#2">2</a>   
-<a name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> java.io.File;
-<a name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> java.io.FileInputStream;
-<a name="5" href="#5">5</a>   <strong class="jxr_keyword">import</strong> java.io.FileOutputStream;
-<a name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> java.io.IOException;
-<a name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> java.io.InputStreamReader;
-<a name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> java.io.OutputStreamWriter;
-<a name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> java.util.zip.GZIPOutputStream;
-<a name="10" href="#10">10</a>  
-<a name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> org.apache.maven.plugin.MojoExecutionException;
-<a name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> org.codehaus.plexus.util.FileUtils;
-<a name="13" href="#13">13</a>  <strong class="jxr_keyword">import</strong> org.codehaus.plexus.util.IOUtil;
-<a name="14" href="#14">14</a>  
-<a name="15" href="#15">15</a>  <strong class="jxr_keyword">import</strong> com.yahoo.platform.yui.compressor.CssCompressor;
-<a name="16" href="#16">16</a>  <strong class="jxr_keyword">import</strong> com.yahoo.platform.yui.compressor.JavaScriptCompressor;
-<a name="17" href="#17">17</a>  
-<a name="18" href="#18">18</a>  <em class="jxr_javadoccomment">/**</em>
-<a name="19" href="#19">19</a>  <em class="jxr_javadoccomment"> * Apply compression on JS and CSS (using YUI Compressor).</em>
-<a name="20" href="#20">20</a>  <em class="jxr_javadoccomment"> *</em>
-<a name="21" href="#21">21</a>  <em class="jxr_javadoccomment"> * @goal compress</em>
-<a name="22" href="#22">22</a>  <em class="jxr_javadoccomment"> * @phase process-resources</em>
-<a name="23" href="#23">23</a>  <em class="jxr_javadoccomment"> *</em>
-<a name="24" href="#24">24</a>  <em class="jxr_javadoccomment"> * @author David Bernard</em>
-<a name="25" href="#25">25</a>  <em class="jxr_javadoccomment"> * @created 2007-08-28</em>
-<a name="26" href="#26">26</a>  <em class="jxr_javadoccomment"> */</em>
-<a name="27" href="#27">27</a>  <em class="jxr_comment">// @SuppressWarnings("unchecked")</em>
-<a name="28" href="#28">28</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../net_alchim31_maven_yuicompressor/YuiCompressorMojo.html">YuiCompressorMojo</a> <strong class="jxr_keyword">extends</strong> <a href="../net_alchim31_maven_yuicompressor/MojoSupport.html">MojoSupport</a> {
-<a name="29" href="#29">29</a>  
-<a name="30" href="#30">30</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="31" href="#31">31</a>  <em class="jxr_javadoccomment">     * Read the input file using "encoding".</em>
-<a name="32" href="#32">32</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="33" href="#33">33</a>  <em class="jxr_javadoccomment">     * @parameter expression="${file.encoding}" default-value="UTF-8"</em>
-<a name="34" href="#34">34</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="35" href="#35">35</a>      <strong class="jxr_keyword">private</strong> String encoding;
-<a name="36" href="#36">36</a>  
-<a name="37" href="#37">37</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="38" href="#38">38</a>  <em class="jxr_javadoccomment">     * The output filename suffix.</em>
-<a name="39" href="#39">39</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="40" href="#40">40</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.suffix}" default-value="-min"</em>
-<a name="41" href="#41">41</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="42" href="#42">42</a>      <strong class="jxr_keyword">private</strong> String suffix;
-<a name="43" href="#43">43</a>  
-<a name="44" href="#44">44</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="45" href="#45">45</a>  <em class="jxr_javadoccomment">     * If no "suffix" must be add to output filename (maven's configuration manage empty suffix like default).</em>
-<a name="46" href="#46">46</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="47" href="#47">47</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.nosuffix}" default-value="false"</em>
-<a name="48" href="#48">48</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="49" href="#49">49</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> nosuffix;
-<a name="50" href="#50">50</a>  
-<a name="51" href="#51">51</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="52" href="#52">52</a>  <em class="jxr_javadoccomment">     * Insert line breaks in output after the specified column number.</em>
-<a name="53" href="#53">53</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.linebreakpos}" default-value="0"</em>
-<a name="55" href="#55">55</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="56" href="#56">56</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> linebreakpos;
-<a name="57" href="#57">57</a>  
-<a name="58" href="#58">58</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="59" href="#59">59</a>  <em class="jxr_javadoccomment">     * [js only] No compression</em>
-<a name="60" href="#60">60</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="61" href="#61">61</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.nocompress}" default-value="false"</em>
-<a name="62" href="#62">62</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="63" href="#63">63</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> nocompress;
-<a name="64" href="#64">64</a>  
-<a name="65" href="#65">65</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="66" href="#66">66</a>  <em class="jxr_javadoccomment">     * [js only] Minify only, do not obfuscate.</em>
-<a name="67" href="#67">67</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="68" href="#68">68</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.nomunge}" default-value="false"</em>
-<a name="69" href="#69">69</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="70" href="#70">70</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> nomunge;
-<a name="71" href="#71">71</a>  
-<a name="72" href="#72">72</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="73" href="#73">73</a>  <em class="jxr_javadoccomment">     * [js only] Preserve unnecessary semicolons.</em>
-<a name="74" href="#74">74</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="75" href="#75">75</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.preserveAllSemiColons}" default-value="false"</em>
-<a name="76" href="#76">76</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="77" href="#77">77</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> preserveAllSemiColons;
-<a name="78" href="#78">78</a>  
-<a name="79" href="#79">79</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="80" href="#80">80</a>  <em class="jxr_javadoccomment">     * [js only] disable all micro optimizations.</em>
-<a name="81" href="#81">81</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="82" href="#82">82</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.disableOptimizations}" default-value="false"</em>
-<a name="83" href="#83">83</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="84" href="#84">84</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> disableOptimizations;
-<a name="85" href="#85">85</a>  
-<a name="86" href="#86">86</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="87" href="#87">87</a>  <em class="jxr_javadoccomment">     * force the compression of every files,</em>
-<a name="88" href="#88">88</a>  <em class="jxr_javadoccomment">     * else if compressed file already exists and is younger than source file, nothing is done.</em>
-<a name="89" href="#89">89</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="90" href="#90">90</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.force}" default-value="false"</em>
-<a name="91" href="#91">91</a>  <em class="jxr_javadoccomment">     */</em>
-<a name="92" href="#92">92</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> force;
-<a name="93" href="#93">93</a>  
-<a name="94" href="#94">94</a>      <em class="jxr_javadoccomment">/**</em>
-<a name="95" href="#95">95</a>  <em class="jxr_javadoccomment">     * a list of aggregation/concatenation to do after processing,</em>
-<a name="96" href="#96">96</a>  <em class="jxr_javadoccomment">     * for example to create big js files that contain several small js files.</em>
-<a name="97" href="#97">97</a>  <em class="jxr_javadoccomment">     * Aggregation could be done on any type of file (js, css, ...).</em>
-<a name="98" href="#98">98</a>  <em class="jxr_javadoccomment">     *</em>
-<a name="99" href="#99">99</a>  <em class="jxr_javadoccomment">     * @parameter</em>
-<a name="100" href="#100">100</a> <em class="jxr_javadoccomment">     */</em>
-<a name="101" href="#101">101</a>     <strong class="jxr_keyword">private</strong> <a href="../net_alchim31_maven_yuicompressor/Aggregation.html">Aggregation</a>[] aggregations;
-<a name="102" href="#102">102</a> 
-<a name="103" href="#103">103</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="104" href="#104">104</a> <em class="jxr_javadoccomment">     * request to create a gzipped version of the yuicompressed/aggregation files.</em>
-<a name="105" href="#105">105</a> <em class="jxr_javadoccomment">     *</em>
-<a name="106" href="#106">106</a> <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.gzip}" default-value="false"</em>
-<a name="107" href="#107">107</a> <em class="jxr_javadoccomment">     */</em>
-<a name="108" href="#108">108</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> gzip;
-<a name="109" href="#109">109</a> 
-<a name="110" href="#110">110</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="111" href="#111">111</a> <em class="jxr_javadoccomment">     * show statistics (compression ratio).</em>
-<a name="112" href="#112">112</a> <em class="jxr_javadoccomment">     *</em>
-<a name="113" href="#113">113</a> <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.statistics}" default-value="true"</em>
-<a name="114" href="#114">114</a> <em class="jxr_javadoccomment">     */</em>
-<a name="115" href="#115">115</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> statistics;
-<a name="116" href="#116">116</a> 
-<a name="117" href="#117">117</a>     <em class="jxr_javadoccomment">/**</em>
-<a name="118" href="#118">118</a> <em class="jxr_javadoccomment">     * aggregate files before minify</em>
-<a name="119" href="#119">119</a> <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.preProcessAggregates}" default-value="false"</em>
-<a name="120" href="#120">120</a> <em class="jxr_javadoccomment">     */</em>
-<a name="121" href="#121">121</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> preProcessAggregates;
-<a name="122" href="#122">122</a> 
-<a name="123" href="#123">123</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">long</strong> inSizeTotal_;
-<a name="124" href="#124">124</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">long</strong> outSizeTotal_;
-<a name="125" href="#125">125</a> 
-<a name="126" href="#126">126</a>     @Override
-<a name="127" href="#127">127</a>     <strong class="jxr_keyword">protected</strong> String[] getDefaultIncludes() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="128" href="#128">128</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String[]{<span class="jxr_string">"**/*.css"</span>, <span class="jxr_string">"**/*.js"</span>};
-<a name="129" href="#129">129</a>     }
-<a name="130" href="#130">130</a> 
-<a name="131" href="#131">131</a>     @Override
-<a name="132" href="#132">132</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> beforeProcess() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="133" href="#133">133</a>         <strong class="jxr_keyword">if</strong> (nosuffix) {
-<a name="134" href="#134">134</a>             suffix = <span class="jxr_string">""</span>;
-<a name="135" href="#135">135</a>         }
-<a name="136" href="#136">136</a> 
-<a name="137" href="#137">137</a>         <strong class="jxr_keyword">if</strong>(preProcessAggregates) aggregate();
-<a name="138" href="#138">138</a>     }
-<a name="139" href="#139">139</a> 
-<a name="140" href="#140">140</a>     @Override
-<a name="141" href="#141">141</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> afterProcess() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="142" href="#142">142</a>         <strong class="jxr_keyword">if</strong> (statistics &amp;&amp; (inSizeTotal_ &gt; 0)) {
-<a name="143" href="#143">143</a>             getLog().info(String.format(<span class="jxr_string">"total input (%db) -&gt; output (%db)[%d%%]"</span>, inSizeTotal_, outSizeTotal_, ((outSizeTotal_ * 100)/inSizeTotal_)));
-<a name="144" href="#144">144</a>         }
-<a name="145" href="#145">145</a> 
-<a name="146" href="#146">146</a>         <strong class="jxr_keyword">if</strong>(!preProcessAggregates) aggregate();
-<a name="147" href="#147">147</a>     }
-<a name="148" href="#148">148</a> 
-<a name="149" href="#149">149</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> aggregate() <strong class="jxr_keyword">throws</strong> Exception {
-<a name="150" href="#150">150</a>         <strong class="jxr_keyword">if</strong> (aggregations != <strong class="jxr_keyword">null</strong>) {
-<a name="151" href="#151">151</a>             <strong class="jxr_keyword">for</strong>(<a href="../net_alchim31_maven_yuicompressor/Aggregation.html">Aggregation</a> aggregation : aggregations) {
-<a name="152" href="#152">152</a>                 getLog().info(<span class="jxr_string">"generate aggregation : "</span> + aggregation.output);
-<a name="153" href="#153">153</a>                 aggregation.run();
-<a name="154" href="#154">154</a>                 File gzipped = gzipIfRequested(aggregation.output);
-<a name="155" href="#155">155</a>                 <strong class="jxr_keyword">if</strong> (statistics) {
-<a name="156" href="#156">156</a>                     <strong class="jxr_keyword">if</strong> (gzipped != <strong class="jxr_keyword">null</strong>) {
-<a name="157" href="#157">157</a>                         getLog().info(String.format(<span class="jxr_string">"%s (%db) -&gt; %s (%db)[%d%%]"</span>, aggregation.output.getName(), aggregation.output.length(), gzipped.getName(), gzipped.length(), ratioOfSize(aggregation.output, gzipped)));
-<a name="158" href="#158">158</a>                     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (aggregation.output.exists()){
-<a name="159" href="#159">159</a>                         getLog().info(String.format(<span class="jxr_string">"%s (%db)"</span>, aggregation.output.getName(), aggregation.output.length()));
-<a name="160" href="#160">160</a>                     } <strong class="jxr_keyword">else</strong> {
-<a name="161" href="#161">161</a>                         getLog().warn(String.format(<span class="jxr_string">"%s not created"</span>, aggregation.output.getName()));
-<a name="162" href="#162">162</a>                     }
-<a name="163" href="#163">163</a>                 }
-<a name="164" href="#164">164</a>             }
-<a name="165" href="#165">165</a>         }
-<a name="166" href="#166">166</a>     }
-<a name="167" href="#167">167</a> 
-<a name="168" href="#168">168</a>     @Override
-<a name="169" href="#169">169</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> processFile(<a href="../net_alchim31_maven_yuicompressor/SourceFile.html">SourceFile</a> src) <strong class="jxr_keyword">throws</strong> Exception {
-<a name="170" href="#170">170</a>         <strong class="jxr_keyword">if</strong> (getLog().isDebugEnabled()) {
-<a name="171" href="#171">171</a>             getLog().debug(<span class="jxr_string">"compress file :"</span> + src.toFile()+ <span class="jxr_string">" to "</span> + src.toDestFile(suffix));
-<a name="172" href="#172">172</a>         }
-<a name="173" href="#173">173</a>         File inFile = src.toFile();
-<a name="174" href="#174">174</a>         File outFile = src.toDestFile(suffix);
-<a name="175" href="#175">175</a> 
-<a name="176" href="#176">176</a>         getLog().debug(<span class="jxr_string">"only compress if input file is younger than existing output file"</span>);
-<a name="177" href="#177">177</a>         <strong class="jxr_keyword">if</strong> (!force &amp;&amp; outFile.exists() &amp;&amp; (outFile.lastModified() &gt; inFile.lastModified())) {
-<a name="178" href="#178">178</a>             <strong class="jxr_keyword">if</strong> (getLog().isInfoEnabled()) {
-<a name="179" href="#179">179</a>                 getLog().info(<span class="jxr_string">"nothing to do, "</span> + outFile + <span class="jxr_string">" is younger than original, use 'force' option or clean your target"</span>);
-<a name="180" href="#180">180</a>             }
-<a name="181" href="#181">181</a>             <strong class="jxr_keyword">return</strong>;
-<a name="182" href="#182">182</a>         }
-<a name="183" href="#183">183</a> 
-<a name="184" href="#184">184</a>         InputStreamReader in = <strong class="jxr_keyword">null</strong>;
-<a name="185" href="#185">185</a>         OutputStreamWriter out = <strong class="jxr_keyword">null</strong>;
-<a name="186" href="#186">186</a>         File outFileTmp = <strong class="jxr_keyword">new</strong> File(outFile.getAbsolutePath() + <span class="jxr_string">".tmp"</span>);
-<a name="187" href="#187">187</a>         FileUtils.forceDelete(outFileTmp);
-<a name="188" href="#188">188</a>         <strong class="jxr_keyword">try</strong> {
-<a name="189" href="#189">189</a>             in = <strong class="jxr_keyword">new</strong> InputStreamReader(<strong class="jxr_keyword">new</strong> FileInputStream(inFile), encoding);
-<a name="190" href="#190">190</a>             <strong class="jxr_keyword">if</strong> (!outFile.getParentFile().exists() &amp;&amp; !outFile.getParentFile().mkdirs()) {
-<a name="191" href="#191">191</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException( <span class="jxr_string">"Cannot create resource output directory: "</span> + outFile.getParentFile() );
-<a name="192" href="#192">192</a>             }
-<a name="193" href="#193">193</a>             getLog().debug(<span class="jxr_string">"use a temporary outputfile (in case in == out)"</span>);
-<a name="194" href="#194">194</a> 
-<a name="195" href="#195">195</a>             getLog().debug(<span class="jxr_string">"start compression"</span>);
-<a name="196" href="#196">196</a>             out = <strong class="jxr_keyword">new</strong> OutputStreamWriter(<strong class="jxr_keyword">new</strong> FileOutputStream(outFileTmp), encoding);
-<a name="197" href="#197">197</a>             <strong class="jxr_keyword">if</strong> (nocompress) {
-<a name="198" href="#198">198</a>                 getLog().info(<span class="jxr_string">"No compression is enabled"</span>);
-<a name="199" href="#199">199</a>                 IOUtil.copy(in, out);
-<a name="200" href="#200">200</a>             }
-<a name="201" href="#201">201</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<span class="jxr_string">".js"</span>.equalsIgnoreCase(src.getExtension())) {
-<a name="202" href="#202">202</a>                 JavaScriptCompressor compressor = <strong class="jxr_keyword">new</strong> JavaScriptCompressor(in, jsErrorReporter_);
-<a name="203" href="#203">203</a>                 compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
-<a name="204" href="#204">204</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<span class="jxr_string">".css"</span>.equalsIgnoreCase(src.getExtension())) {
-<a name="205" href="#205">205</a>                 compressCss(in, out);
-<a name="206" href="#206">206</a>             }
-<a name="207" href="#207">207</a>             getLog().debug(<span class="jxr_string">"end compression"</span>);
-<a name="208" href="#208">208</a>         } <strong class="jxr_keyword">finally</strong> {
-<a name="209" href="#209">209</a>             IOUtil.close(in);
-<a name="210" href="#210">210</a>             IOUtil.close(out);
-<a name="211" href="#211">211</a>         }
-<a name="212" href="#212">212</a>         FileUtils.forceDelete(outFile);
-<a name="213" href="#213">213</a>         FileUtils.rename(outFileTmp, outFile);
-<a name="214" href="#214">214</a>         File gzipped = gzipIfRequested(outFile);
-<a name="215" href="#215">215</a>         <strong class="jxr_keyword">if</strong> (statistics) {
-<a name="216" href="#216">216</a>             inSizeTotal_ += inFile.length();
-<a name="217" href="#217">217</a>             outSizeTotal_ += outFile.length();
-<a name="218" href="#218">218</a>             getLog().info(String.format(<span class="jxr_string">"%s (%db) -&gt; %s (%db)[%d%%]"</span>, inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile)));
-<a name="219" href="#219">219</a>             <strong class="jxr_keyword">if</strong> (gzipped != <strong class="jxr_keyword">null</strong>) {
-<a name="220" href="#220">220</a>                 getLog().info(String.format(<span class="jxr_string">"%s (%db) -&gt; %s (%db)[%d%%]"</span>, inFile.getName(), inFile.length(), gzipped.getName(), gzipped.length(), ratioOfSize(inFile, gzipped)));
-<a name="221" href="#221">221</a>             }
-<a name="222" href="#222">222</a>         }
-<a name="223" href="#223">223</a>     }
-<a name="224" href="#224">224</a> 
-<a name="225" href="#225">225</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> compressCss(InputStreamReader in, OutputStreamWriter out)
-<a name="226" href="#226">226</a> 			<strong class="jxr_keyword">throws</strong> IOException {
-<a name="227" href="#227">227</a> 		<strong class="jxr_keyword">try</strong>{
-<a name="228" href="#228">228</a> 		    CssCompressor compressor = <strong class="jxr_keyword">new</strong> CssCompressor(in);
-<a name="229" href="#229">229</a> 		    compressor.compress(out, linebreakpos);
-<a name="230" href="#230">230</a> 		}<strong class="jxr_keyword">catch</strong>(IllegalArgumentException e){
-<a name="231" href="#231">231</a> 			<strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
-<a name="232" href="#232">232</a> 					<span class="jxr_string">"Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again"</span>,e);
-<a name="233" href="#233">233</a> 		}
-<a name="234" href="#234">234</a> 	}
-<a name="235" href="#235">235</a> 
-<a name="236" href="#236">236</a>     <strong class="jxr_keyword">protected</strong> File gzipIfRequested(File file) <strong class="jxr_keyword">throws</strong> Exception {
-<a name="237" href="#237">237</a>         <strong class="jxr_keyword">if</strong> (!gzip || (file == <strong class="jxr_keyword">null</strong>) || (!file.exists())) {
-<a name="238" href="#238">238</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a name="239" href="#239">239</a>         }
-<a name="240" href="#240">240</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">".gz"</span>.equalsIgnoreCase(FileUtils.getExtension(file.getName()))) {
-<a name="241" href="#241">241</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
-<a name="242" href="#242">242</a>         }
-<a name="243" href="#243">243</a>         File gzipped = <strong class="jxr_keyword">new</strong> File(file.getAbsolutePath()+<span class="jxr_string">".gz"</span>);
-<a name="244" href="#244">244</a>         getLog().debug(String.format(<span class="jxr_string">"create gzip version : %s"</span>, gzipped.getName()));
-<a name="245" href="#245">245</a>         GZIPOutputStream out = <strong class="jxr_keyword">null</strong>;
-<a name="246" href="#246">246</a>         FileInputStream in = <strong class="jxr_keyword">null</strong>;
-<a name="247" href="#247">247</a>         <strong class="jxr_keyword">try</strong> {
-<a name="248" href="#248">248</a>             out = <strong class="jxr_keyword">new</strong> GZIPOutputStream(<strong class="jxr_keyword">new</strong> FileOutputStream(gzipped));
-<a name="249" href="#249">249</a>             in = <strong class="jxr_keyword">new</strong> FileInputStream(file);
-<a name="250" href="#250">250</a>             IOUtil.copy(in, out);
-<a name="251" href="#251">251</a>         } <strong class="jxr_keyword">finally</strong> {
-<a name="252" href="#252">252</a>             IOUtil.close(in);
-<a name="253" href="#253">253</a>             IOUtil.close(out);
-<a name="254" href="#254">254</a>         }
-<a name="255" href="#255">255</a>         <strong class="jxr_keyword">return</strong> gzipped;
-<a name="256" href="#256">256</a>     }
-<a name="257" href="#257">257</a> 
-<a name="258" href="#258">258</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> ratioOfSize(File file100, File fileX) <strong class="jxr_keyword">throws</strong> Exception {
-<a name="259" href="#259">259</a>         <strong class="jxr_keyword">long</strong> v100 = Math.max(file100.length(), 1);
-<a name="260" href="#260">260</a>         <strong class="jxr_keyword">long</strong> vX = Math.max(fileX.length(), 1);
-<a name="261" href="#261">261</a>         <strong class="jxr_keyword">return</strong> (vX * 100)/v100;
-<a name="262" href="#262">262</a>     }
-<a name="263" href="#263">263</a> }
+<a class="jxr_linenumber" name="1" href="#1">1</a>   <strong class="jxr_keyword">package</strong> net_alchim31_maven_yuicompressor;
+<a class="jxr_linenumber" name="2" href="#2">2</a>   
+<a class="jxr_linenumber" name="3" href="#3">3</a>   <strong class="jxr_keyword">import</strong> java.io.File;
+<a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> java.io.FileInputStream;
+<a class="jxr_linenumber" name="5" href="#5">5</a>   <strong class="jxr_keyword">import</strong> java.io.FileOutputStream;
+<a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> java.io.IOException;
+<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> java.io.InputStreamReader;
+<a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> java.io.OutputStreamWriter;
+<a class="jxr_linenumber" name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> java.util.zip.GZIPOutputStream;
+<a class="jxr_linenumber" name="10" href="#10">10</a>  
+<a class="jxr_linenumber" name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> org.apache.maven.plugin.MojoExecutionException;
+<a class="jxr_linenumber" name="12" href="#12">12</a>  <strong class="jxr_keyword">import</strong> org.codehaus.plexus.util.FileUtils;
+<a class="jxr_linenumber" name="13" href="#13">13</a>  <strong class="jxr_keyword">import</strong> org.codehaus.plexus.util.IOUtil;
+<a class="jxr_linenumber" name="14" href="#14">14</a>  
+<a class="jxr_linenumber" name="15" href="#15">15</a>  <strong class="jxr_keyword">import</strong> com.yahoo.platform.yui.compressor.CssCompressor;
+<a class="jxr_linenumber" name="16" href="#16">16</a>  <strong class="jxr_keyword">import</strong> com.yahoo.platform.yui.compressor.JavaScriptCompressor;
+<a class="jxr_linenumber" name="17" href="#17">17</a>  
+<a class="jxr_linenumber" name="18" href="#18">18</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="19" href="#19">19</a>  <em class="jxr_javadoccomment"> * Apply compression on JS and CSS (using YUI Compressor).</em>
+<a class="jxr_linenumber" name="20" href="#20">20</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="21" href="#21">21</a>  <em class="jxr_javadoccomment"> * @goal compress</em>
+<a class="jxr_linenumber" name="22" href="#22">22</a>  <em class="jxr_javadoccomment"> * @phase process-resources</em>
+<a class="jxr_linenumber" name="23" href="#23">23</a>  <em class="jxr_javadoccomment"> *</em>
+<a class="jxr_linenumber" name="24" href="#24">24</a>  <em class="jxr_javadoccomment"> * @author David Bernard</em>
+<a class="jxr_linenumber" name="25" href="#25">25</a>  <em class="jxr_javadoccomment"> * @created 2007-08-28</em>
+<a class="jxr_linenumber" name="26" href="#26">26</a>  <em class="jxr_javadoccomment"> * @threadSafe</em>
+<a class="jxr_linenumber" name="27" href="#27">27</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="28" href="#28">28</a>  <em class="jxr_comment">// @SuppressWarnings("unchecked")</em>
+<a class="jxr_linenumber" name="29" href="#29">29</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../net_alchim31_maven_yuicompressor/YuiCompressorMojo.html">YuiCompressorMojo</a> <strong class="jxr_keyword">extends</strong> <a href="../net_alchim31_maven_yuicompressor/MojoSupport.html">MojoSupport</a> {
+<a class="jxr_linenumber" name="30" href="#30">30</a>  
+<a class="jxr_linenumber" name="31" href="#31">31</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="32" href="#32">32</a>  <em class="jxr_javadoccomment">     * Read the input file using "encoding".</em>
+<a class="jxr_linenumber" name="33" href="#33">33</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="34" href="#34">34</a>  <em class="jxr_javadoccomment">     * @parameter expression="${file.encoding}" default-value="UTF-8"</em>
+<a class="jxr_linenumber" name="35" href="#35">35</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="36" href="#36">36</a>      <strong class="jxr_keyword">private</strong> String encoding;
+<a class="jxr_linenumber" name="37" href="#37">37</a>  
+<a class="jxr_linenumber" name="38" href="#38">38</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="39" href="#39">39</a>  <em class="jxr_javadoccomment">     * The output filename suffix.</em>
+<a class="jxr_linenumber" name="40" href="#40">40</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="41" href="#41">41</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.suffix}" default-value="-min"</em>
+<a class="jxr_linenumber" name="42" href="#42">42</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="43" href="#43">43</a>      <strong class="jxr_keyword">private</strong> String suffix;
+<a class="jxr_linenumber" name="44" href="#44">44</a>  
+<a class="jxr_linenumber" name="45" href="#45">45</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="46" href="#46">46</a>  <em class="jxr_javadoccomment">     * If no "suffix" must be add to output filename (maven's configuration manage empty suffix like default).</em>
+<a class="jxr_linenumber" name="47" href="#47">47</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="48" href="#48">48</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.nosuffix}" default-value="false"</em>
+<a class="jxr_linenumber" name="49" href="#49">49</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="50" href="#50">50</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> nosuffix;
+<a class="jxr_linenumber" name="51" href="#51">51</a>  
+<a class="jxr_linenumber" name="52" href="#52">52</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="53" href="#53">53</a>  <em class="jxr_javadoccomment">     * Insert line breaks in output after the specified column number.</em>
+<a class="jxr_linenumber" name="54" href="#54">54</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="55" href="#55">55</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.linebreakpos}" default-value="-1"</em>
+<a class="jxr_linenumber" name="56" href="#56">56</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="57" href="#57">57</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">int</strong> linebreakpos;
+<a class="jxr_linenumber" name="58" href="#58">58</a>  
+<a class="jxr_linenumber" name="59" href="#59">59</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="60" href="#60">60</a>  <em class="jxr_javadoccomment">     * [js only] No compression</em>
+<a class="jxr_linenumber" name="61" href="#61">61</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="62" href="#62">62</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.nocompress}" default-value="false"</em>
+<a class="jxr_linenumber" name="63" href="#63">63</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="64" href="#64">64</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> nocompress;
+<a class="jxr_linenumber" name="65" href="#65">65</a>  
+<a class="jxr_linenumber" name="66" href="#66">66</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="67" href="#67">67</a>  <em class="jxr_javadoccomment">     * [js only] Minify only, do not obfuscate.</em>
+<a class="jxr_linenumber" name="68" href="#68">68</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="69" href="#69">69</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.nomunge}" default-value="false"</em>
+<a class="jxr_linenumber" name="70" href="#70">70</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="71" href="#71">71</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> nomunge;
+<a class="jxr_linenumber" name="72" href="#72">72</a>  
+<a class="jxr_linenumber" name="73" href="#73">73</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="74" href="#74">74</a>  <em class="jxr_javadoccomment">     * [js only] Preserve unnecessary semicolons.</em>
+<a class="jxr_linenumber" name="75" href="#75">75</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="76" href="#76">76</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.preserveAllSemiColons}" default-value="false"</em>
+<a class="jxr_linenumber" name="77" href="#77">77</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="78" href="#78">78</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> preserveAllSemiColons;
+<a class="jxr_linenumber" name="79" href="#79">79</a>  
+<a class="jxr_linenumber" name="80" href="#80">80</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="81" href="#81">81</a>  <em class="jxr_javadoccomment">     * [js only] disable all micro optimizations.</em>
+<a class="jxr_linenumber" name="82" href="#82">82</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="83" href="#83">83</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.disableOptimizations}" default-value="false"</em>
+<a class="jxr_linenumber" name="84" href="#84">84</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="85" href="#85">85</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> disableOptimizations;
+<a class="jxr_linenumber" name="86" href="#86">86</a>  
+<a class="jxr_linenumber" name="87" href="#87">87</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="88" href="#88">88</a>  <em class="jxr_javadoccomment">     * force the compression of every files,</em>
+<a class="jxr_linenumber" name="89" href="#89">89</a>  <em class="jxr_javadoccomment">     * else if compressed file already exists and is younger than source file, nothing is done.</em>
+<a class="jxr_linenumber" name="90" href="#90">90</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="91" href="#91">91</a>  <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.force}" default-value="false"</em>
+<a class="jxr_linenumber" name="92" href="#92">92</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="93" href="#93">93</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> force;
+<a class="jxr_linenumber" name="94" href="#94">94</a>  
+<a class="jxr_linenumber" name="95" href="#95">95</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="96" href="#96">96</a>  <em class="jxr_javadoccomment">     * a list of aggregation/concatenation to do after processing,</em>
+<a class="jxr_linenumber" name="97" href="#97">97</a>  <em class="jxr_javadoccomment">     * for example to create big js files that contain several small js files.</em>
+<a class="jxr_linenumber" name="98" href="#98">98</a>  <em class="jxr_javadoccomment">     * Aggregation could be done on any type of file (js, css, ...).</em>
+<a class="jxr_linenumber" name="99" href="#99">99</a>  <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="100" href="#100">100</a> <em class="jxr_javadoccomment">     * @parameter</em>
+<a class="jxr_linenumber" name="101" href="#101">101</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="102" href="#102">102</a>     <strong class="jxr_keyword">private</strong> <a href="../net_alchim31_maven_yuicompressor/Aggregation.html">Aggregation</a>[] aggregations;
+<a class="jxr_linenumber" name="103" href="#103">103</a> 
+<a class="jxr_linenumber" name="104" href="#104">104</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="105" href="#105">105</a> <em class="jxr_javadoccomment">     * request to create a gzipped version of the yuicompressed/aggregation files.</em>
+<a class="jxr_linenumber" name="106" href="#106">106</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="107" href="#107">107</a> <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.gzip}" default-value="false"</em>
+<a class="jxr_linenumber" name="108" href="#108">108</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="109" href="#109">109</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> gzip;
+<a class="jxr_linenumber" name="110" href="#110">110</a> 
+<a class="jxr_linenumber" name="111" href="#111">111</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="112" href="#112">112</a> <em class="jxr_javadoccomment">     * show statistics (compression ratio).</em>
+<a class="jxr_linenumber" name="113" href="#113">113</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="114" href="#114">114</a> <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.statistics}" default-value="true"</em>
+<a class="jxr_linenumber" name="115" href="#115">115</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="116" href="#116">116</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> statistics;
+<a class="jxr_linenumber" name="117" href="#117">117</a> 
+<a class="jxr_linenumber" name="118" href="#118">118</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="119" href="#119">119</a> <em class="jxr_javadoccomment">     * aggregate files before minify</em>
+<a class="jxr_linenumber" name="120" href="#120">120</a> <em class="jxr_javadoccomment">     * @parameter expression="${maven.yuicompressor.preProcessAggregates}" default-value="false"</em>
+<a class="jxr_linenumber" name="121" href="#121">121</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="122" href="#122">122</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">boolean</strong> preProcessAggregates;
+<a class="jxr_linenumber" name="123" href="#123">123</a> 
+<a class="jxr_linenumber" name="124" href="#124">124</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">long</strong> inSizeTotal_;
+<a class="jxr_linenumber" name="125" href="#125">125</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">long</strong> outSizeTotal_;
+<a class="jxr_linenumber" name="126" href="#126">126</a> 
+<a class="jxr_linenumber" name="127" href="#127">127</a>     @Override
+<a class="jxr_linenumber" name="128" href="#128">128</a>     <strong class="jxr_keyword">protected</strong> String[] getDefaultIncludes() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="129" href="#129">129</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> String[]{<span class="jxr_string">"**/*.css"</span>, <span class="jxr_string">"**/*.js"</span>};
+<a class="jxr_linenumber" name="130" href="#130">130</a>     }
+<a class="jxr_linenumber" name="131" href="#131">131</a> 
+<a class="jxr_linenumber" name="132" href="#132">132</a>     @Override
+<a class="jxr_linenumber" name="133" href="#133">133</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> beforeProcess() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="134" href="#134">134</a>         <strong class="jxr_keyword">if</strong> (nosuffix) {
+<a class="jxr_linenumber" name="135" href="#135">135</a>             suffix = <span class="jxr_string">""</span>;
+<a class="jxr_linenumber" name="136" href="#136">136</a>         }
+<a class="jxr_linenumber" name="137" href="#137">137</a> 
+<a class="jxr_linenumber" name="138" href="#138">138</a>         <strong class="jxr_keyword">if</strong>(preProcessAggregates) aggregate();
+<a class="jxr_linenumber" name="139" href="#139">139</a>     }
+<a class="jxr_linenumber" name="140" href="#140">140</a> 
+<a class="jxr_linenumber" name="141" href="#141">141</a>     @Override
+<a class="jxr_linenumber" name="142" href="#142">142</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> afterProcess() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="143" href="#143">143</a>         <strong class="jxr_keyword">if</strong> (statistics &amp;&amp; (inSizeTotal_ &gt; 0)) {
+<a class="jxr_linenumber" name="144" href="#144">144</a>             getLog().info(String.format(<span class="jxr_string">"total input (%db) -&gt; output (%db)[%d%%]"</span>, inSizeTotal_, outSizeTotal_, ((outSizeTotal_ * 100)/inSizeTotal_)));
+<a class="jxr_linenumber" name="145" href="#145">145</a>         }
+<a class="jxr_linenumber" name="146" href="#146">146</a> 
+<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">if</strong>(!preProcessAggregates) aggregate();
+<a class="jxr_linenumber" name="148" href="#148">148</a>     }
+<a class="jxr_linenumber" name="149" href="#149">149</a> 
+<a class="jxr_linenumber" name="150" href="#150">150</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> aggregate() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="151" href="#151">151</a>         <strong class="jxr_keyword">if</strong> (aggregations != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="152" href="#152">152</a>             <strong class="jxr_keyword">for</strong>(<a href="../net_alchim31_maven_yuicompressor/Aggregation.html">Aggregation</a> aggregation : aggregations) {
+<a class="jxr_linenumber" name="153" href="#153">153</a>                 getLog().info(<span class="jxr_string">"generate aggregation : "</span> + aggregation.output);
+<a class="jxr_linenumber" name="154" href="#154">154</a>                 aggregation.run();
+<a class="jxr_linenumber" name="155" href="#155">155</a>                 File gzipped = gzipIfRequested(aggregation.output);
+<a class="jxr_linenumber" name="156" href="#156">156</a>                 <strong class="jxr_keyword">if</strong> (statistics) {
+<a class="jxr_linenumber" name="157" href="#157">157</a>                     <strong class="jxr_keyword">if</strong> (gzipped != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="158" href="#158">158</a>                         getLog().info(String.format(<span class="jxr_string">"%s (%db) -&gt; %s (%db)[%d%%]"</span>, aggregation.output.getName(), aggregation.output.length(), gzipped.getName(), gzipped.length(), ratioOfSize(aggregation.output, gzipped)));
+<a class="jxr_linenumber" name="159" href="#159">159</a>                     } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (aggregation.output.exists()){
+<a class="jxr_linenumber" name="160" href="#160">160</a>                         getLog().info(String.format(<span class="jxr_string">"%s (%db)"</span>, aggregation.output.getName(), aggregation.output.length()));
+<a class="jxr_linenumber" name="161" href="#161">161</a>                     } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="162" href="#162">162</a>                         getLog().warn(String.format(<span class="jxr_string">"%s not created"</span>, aggregation.output.getName()));
+<a class="jxr_linenumber" name="163" href="#163">163</a>                     }
+<a class="jxr_linenumber" name="164" href="#164">164</a>                 }
+<a class="jxr_linenumber" name="165" href="#165">165</a>             }
+<a class="jxr_linenumber" name="166" href="#166">166</a>         }
+<a class="jxr_linenumber" name="167" href="#167">167</a>     }
+<a class="jxr_linenumber" name="168" href="#168">168</a> 
+<a class="jxr_linenumber" name="169" href="#169">169</a>     @Override
+<a class="jxr_linenumber" name="170" href="#170">170</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">void</strong> processFile(<a href="../net_alchim31_maven_yuicompressor/SourceFile.html">SourceFile</a> src) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="171" href="#171">171</a>         <strong class="jxr_keyword">if</strong> (getLog().isDebugEnabled()) {
+<a class="jxr_linenumber" name="172" href="#172">172</a>             getLog().debug(<span class="jxr_string">"compress file :"</span> + src.toFile()+ <span class="jxr_string">" to "</span> + src.toDestFile(suffix));
+<a class="jxr_linenumber" name="173" href="#173">173</a>         }
+<a class="jxr_linenumber" name="174" href="#174">174</a>         File inFile = src.toFile();
+<a class="jxr_linenumber" name="175" href="#175">175</a>         File outFile = src.toDestFile(suffix);
+<a class="jxr_linenumber" name="176" href="#176">176</a> 
+<a class="jxr_linenumber" name="177" href="#177">177</a>         getLog().debug(<span class="jxr_string">"only compress if input file is younger than existing output file"</span>);
+<a class="jxr_linenumber" name="178" href="#178">178</a>         <strong class="jxr_keyword">if</strong> (!force &amp;&amp; outFile.exists() &amp;&amp; (outFile.lastModified() &gt; inFile.lastModified())) {
+<a class="jxr_linenumber" name="179" href="#179">179</a>             <strong class="jxr_keyword">if</strong> (getLog().isInfoEnabled()) {
+<a class="jxr_linenumber" name="180" href="#180">180</a>                 getLog().info(<span class="jxr_string">"nothing to do, "</span> + outFile + <span class="jxr_string">" is younger than original, use 'force' option or clean your target"</span>);
+<a class="jxr_linenumber" name="181" href="#181">181</a>             }
+<a class="jxr_linenumber" name="182" href="#182">182</a>             <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="183" href="#183">183</a>         }
+<a class="jxr_linenumber" name="184" href="#184">184</a> 
+<a class="jxr_linenumber" name="185" href="#185">185</a>         InputStreamReader in = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="186" href="#186">186</a>         OutputStreamWriter out = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="187" href="#187">187</a>         File outFileTmp = <strong class="jxr_keyword">new</strong> File(outFile.getAbsolutePath() + <span class="jxr_string">".tmp"</span>);
+<a class="jxr_linenumber" name="188" href="#188">188</a>         FileUtils.forceDelete(outFileTmp);
+<a class="jxr_linenumber" name="189" href="#189">189</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="190" href="#190">190</a>             in = <strong class="jxr_keyword">new</strong> InputStreamReader(<strong class="jxr_keyword">new</strong> FileInputStream(inFile), encoding);
+<a class="jxr_linenumber" name="191" href="#191">191</a>             <strong class="jxr_keyword">if</strong> (!outFile.getParentFile().exists() &amp;&amp; !outFile.getParentFile().mkdirs()) {
+<a class="jxr_linenumber" name="192" href="#192">192</a>                 <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> MojoExecutionException( <span class="jxr_string">"Cannot create resource output directory: "</span> + outFile.getParentFile() );
+<a class="jxr_linenumber" name="193" href="#193">193</a>             }
+<a class="jxr_linenumber" name="194" href="#194">194</a>             getLog().debug(<span class="jxr_string">"use a temporary outputfile (in case in == out)"</span>);
+<a class="jxr_linenumber" name="195" href="#195">195</a> 
+<a class="jxr_linenumber" name="196" href="#196">196</a>             getLog().debug(<span class="jxr_string">"start compression"</span>);
+<a class="jxr_linenumber" name="197" href="#197">197</a>             out = <strong class="jxr_keyword">new</strong> OutputStreamWriter(<strong class="jxr_keyword">new</strong> FileOutputStream(outFileTmp), encoding);
+<a class="jxr_linenumber" name="198" href="#198">198</a>             <strong class="jxr_keyword">if</strong> (nocompress) {
+<a class="jxr_linenumber" name="199" href="#199">199</a>                 getLog().info(<span class="jxr_string">"No compression is enabled"</span>);
+<a class="jxr_linenumber" name="200" href="#200">200</a>                 IOUtil.copy(in, out);
+<a class="jxr_linenumber" name="201" href="#201">201</a>             }
+<a class="jxr_linenumber" name="202" href="#202">202</a>             <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<span class="jxr_string">".js"</span>.equalsIgnoreCase(src.getExtension())) {
+<a class="jxr_linenumber" name="203" href="#203">203</a>                 JavaScriptCompressor compressor = <strong class="jxr_keyword">new</strong> JavaScriptCompressor(in, jsErrorReporter_);
+<a class="jxr_linenumber" name="204" href="#204">204</a>                 compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
+<a class="jxr_linenumber" name="205" href="#205">205</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (<span class="jxr_string">".css"</span>.equalsIgnoreCase(src.getExtension())) {
+<a class="jxr_linenumber" name="206" href="#206">206</a>                 compressCss(in, out);
+<a class="jxr_linenumber" name="207" href="#207">207</a>             }
+<a class="jxr_linenumber" name="208" href="#208">208</a>             getLog().debug(<span class="jxr_string">"end compression"</span>);
+<a class="jxr_linenumber" name="209" href="#209">209</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="210" href="#210">210</a>             IOUtil.close(in);
+<a class="jxr_linenumber" name="211" href="#211">211</a>             IOUtil.close(out);
+<a class="jxr_linenumber" name="212" href="#212">212</a>         }
+<a class="jxr_linenumber" name="213" href="#213">213</a>         FileUtils.forceDelete(outFile);
+<a class="jxr_linenumber" name="214" href="#214">214</a>         FileUtils.rename(outFileTmp, outFile);
+<a class="jxr_linenumber" name="215" href="#215">215</a>         File gzipped = gzipIfRequested(outFile);
+<a class="jxr_linenumber" name="216" href="#216">216</a>         <strong class="jxr_keyword">if</strong> (statistics) {
+<a class="jxr_linenumber" name="217" href="#217">217</a>             inSizeTotal_ += inFile.length();
+<a class="jxr_linenumber" name="218" href="#218">218</a>             outSizeTotal_ += outFile.length();
+<a class="jxr_linenumber" name="219" href="#219">219</a>             getLog().info(String.format(<span class="jxr_string">"%s (%db) -&gt; %s (%db)[%d%%]"</span>, inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile)));
+<a class="jxr_linenumber" name="220" href="#220">220</a>             <strong class="jxr_keyword">if</strong> (gzipped != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="221" href="#221">221</a>                 getLog().info(String.format(<span class="jxr_string">"%s (%db) -&gt; %s (%db)[%d%%]"</span>, inFile.getName(), inFile.length(), gzipped.getName(), gzipped.length(), ratioOfSize(inFile, gzipped)));
+<a class="jxr_linenumber" name="222" href="#222">222</a>             }
+<a class="jxr_linenumber" name="223" href="#223">223</a>         }
+<a class="jxr_linenumber" name="224" href="#224">224</a>     }
+<a class="jxr_linenumber" name="225" href="#225">225</a> 
+<a class="jxr_linenumber" name="226" href="#226">226</a> 	<strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> compressCss(InputStreamReader in, OutputStreamWriter out)
+<a class="jxr_linenumber" name="227" href="#227">227</a> 			<strong class="jxr_keyword">throws</strong> IOException {
+<a class="jxr_linenumber" name="228" href="#228">228</a> 		<strong class="jxr_keyword">try</strong>{
+<a class="jxr_linenumber" name="229" href="#229">229</a> 		    CssCompressor compressor = <strong class="jxr_keyword">new</strong> CssCompressor(in);
+<a class="jxr_linenumber" name="230" href="#230">230</a> 		    compressor.compress(out, linebreakpos);
+<a class="jxr_linenumber" name="231" href="#231">231</a> 		}<strong class="jxr_keyword">catch</strong>(IllegalArgumentException e){
+<a class="jxr_linenumber" name="232" href="#232">232</a> 			<strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
+<a class="jxr_linenumber" name="233" href="#233">233</a> 					<span class="jxr_string">"Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again"</span>,e);
+<a class="jxr_linenumber" name="234" href="#234">234</a> 		}
+<a class="jxr_linenumber" name="235" href="#235">235</a> 	}
+<a class="jxr_linenumber" name="236" href="#236">236</a> 
+<a class="jxr_linenumber" name="237" href="#237">237</a>     <strong class="jxr_keyword">protected</strong> File gzipIfRequested(File file) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="238" href="#238">238</a>         <strong class="jxr_keyword">if</strong> (!gzip || (file == <strong class="jxr_keyword">null</strong>) || (!file.exists())) {
+<a class="jxr_linenumber" name="239" href="#239">239</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="240" href="#240">240</a>         }
+<a class="jxr_linenumber" name="241" href="#241">241</a>         <strong class="jxr_keyword">if</strong> (<span class="jxr_string">".gz"</span>.equalsIgnoreCase(FileUtils.getExtension(file.getName()))) {
+<a class="jxr_linenumber" name="242" href="#242">242</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="243" href="#243">243</a>         }
+<a class="jxr_linenumber" name="244" href="#244">244</a>         File gzipped = <strong class="jxr_keyword">new</strong> File(file.getAbsolutePath()+<span class="jxr_string">".gz"</span>);
+<a class="jxr_linenumber" name="245" href="#245">245</a>         getLog().debug(String.format(<span class="jxr_string">"create gzip version : %s"</span>, gzipped.getName()));
+<a class="jxr_linenumber" name="246" href="#246">246</a>         GZIPOutputStream out = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="247" href="#247">247</a>         FileInputStream in = <strong class="jxr_keyword">null</strong>;
+<a class="jxr_linenumber" name="248" href="#248">248</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="249" href="#249">249</a>             out = <strong class="jxr_keyword">new</strong> GZIPOutputStream(<strong class="jxr_keyword">new</strong> FileOutputStream(gzipped));
+<a class="jxr_linenumber" name="250" href="#250">250</a>             in = <strong class="jxr_keyword">new</strong> FileInputStream(file);
+<a class="jxr_linenumber" name="251" href="#251">251</a>             IOUtil.copy(in, out);
+<a class="jxr_linenumber" name="252" href="#252">252</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="253" href="#253">253</a>             IOUtil.close(in);
+<a class="jxr_linenumber" name="254" href="#254">254</a>             IOUtil.close(out);
+<a class="jxr_linenumber" name="255" href="#255">255</a>         }
+<a class="jxr_linenumber" name="256" href="#256">256</a>         <strong class="jxr_keyword">return</strong> gzipped;
+<a class="jxr_linenumber" name="257" href="#257">257</a>     }
+<a class="jxr_linenumber" name="258" href="#258">258</a> 
+<a class="jxr_linenumber" name="259" href="#259">259</a>     <strong class="jxr_keyword">protected</strong> <strong class="jxr_keyword">long</strong> ratioOfSize(File file100, File fileX) <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="260" href="#260">260</a>         <strong class="jxr_keyword">long</strong> v100 = Math.max(file100.length(), 1);
+<a class="jxr_linenumber" name="261" href="#261">261</a>         <strong class="jxr_keyword">long</strong> vX = Math.max(fileX.length(), 1);
+<a class="jxr_linenumber" name="262" href="#262">262</a>         <strong class="jxr_keyword">return</strong> (vX * 100)/v100;
+<a class="jxr_linenumber" name="263" href="#263">263</a>     }
+<a class="jxr_linenumber" name="264" href="#264">264</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
