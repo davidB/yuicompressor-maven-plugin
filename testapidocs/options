@@ -30,6 +30,8 @@
 -link
 'http://junit.sourceforge.net/javadoc'
 -link
+'../apidocs'
+-link
 'http://java.sun.com/javase/6/docs/api'
 -use
 -version
