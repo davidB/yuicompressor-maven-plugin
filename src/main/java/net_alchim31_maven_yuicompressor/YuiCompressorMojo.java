@@ -8,25 +8,20 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
 import com.yahoo.platform.yui.compressor.CssCompressor;
-import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
 
 /**
  * Apply compression on JS and CSS (using YUI Compressor).
- *
- * @goal compress
- * @phase process-resources
  *
  * @author David Bernard
  * @created 2007-08-28
  * @threadSafe
  */
 // @SuppressWarnings("unchecked")
-public class YuiCompressorMojo extends MojoSupport {
+public abstract class YuiCompressorMojo extends MojoSupport {
 
     /**
      * Read the input file using "encoding".
@@ -121,8 +116,8 @@ public class YuiCompressorMojo extends MojoSupport {
      */
     private boolean preProcessAggregates;
 
-    private long inSizeTotal_;
-    private long outSizeTotal_;
+    protected long inSizeTotal_;
+    protected long outSizeTotal_;
 
     @Override
     protected String[] getDefaultIncludes() throws Exception {
@@ -165,65 +160,10 @@ public class YuiCompressorMojo extends MojoSupport {
             }
         }
     }
-
-    @Override
-    protected void processFile(SourceFile src) throws Exception {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("compress file :" + src.toFile()+ " to " + src.toDestFile(suffix));
-        }
-        File inFile = src.toFile();
-        File outFile = src.toDestFile(suffix);
-
-        getLog().debug("only compress if input file is younger than existing output file");
-        if (!force && outFile.exists() && (outFile.lastModified() > inFile.lastModified())) {
-            if (getLog().isInfoEnabled()) {
-                getLog().info("nothing to do, " + outFile + " is younger than original, use 'force' option or clean your target");
-            }
-            return;
-        }
-
-        InputStreamReader in = null;
-        OutputStreamWriter out = null;
-        File outFileTmp = new File(outFile.getAbsolutePath() + ".tmp");
-        FileUtils.forceDelete(outFileTmp);
-        try {
-            in = new InputStreamReader(new FileInputStream(inFile), encoding);
-            if (!outFile.getParentFile().exists() && !outFile.getParentFile().mkdirs()) {
-                throw new MojoExecutionException( "Cannot create resource output directory: " + outFile.getParentFile() );
-            }
-            getLog().debug("use a temporary outputfile (in case in == out)");
-
-            getLog().debug("start compression");
-            out = new OutputStreamWriter(new FileOutputStream(outFileTmp), encoding);
-            if (nocompress) {
-                getLog().info("No compression is enabled");
-                IOUtil.copy(in, out);
-            }
-            else if (".js".equalsIgnoreCase(src.getExtension())) {
-                JavaScriptCompressor compressor = new JavaScriptCompressor(in, jsErrorReporter_);
-                compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
-            } else if (".css".equalsIgnoreCase(src.getExtension())) {
-                compressCss(in, out);
-            }
-            getLog().debug("end compression");
-        } finally {
-            IOUtil.close(in);
-            IOUtil.close(out);
-        }
-        FileUtils.forceDelete(outFile);
-        FileUtils.rename(outFileTmp, outFile);
-        File gzipped = gzipIfRequested(outFile);
-        if (statistics) {
-            inSizeTotal_ += inFile.length();
-            outSizeTotal_ += outFile.length();
-            getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile)));
-            if (gzipped != null) {
-                getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), gzipped.getName(), gzipped.length(), ratioOfSize(inFile, gzipped)));
-            }
-        }
-    }
-
-	private void compressCss(InputStreamReader in, OutputStreamWriter out)
+    
+    protected abstract void processFile(SourceFile src) throws Exception;
+    
+	protected void compressCss(InputStreamReader in, OutputStreamWriter out)
 			throws IOException {
 		try{
 		    CssCompressor compressor = new CssCompressor(in);
@@ -261,4 +201,64 @@ public class YuiCompressorMojo extends MojoSupport {
         long vX = Math.max(fileX.length(), 1);
         return (vX * 100)/v100;
     }
+
+	public String getEncoding() {
+		return encoding;
+	}
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public boolean isNosuffix() {
+		return nosuffix;
+	}
+
+	public int getLinebreakpos() {
+		return linebreakpos;
+	}
+
+	public boolean isNocompress() {
+		return nocompress;
+	}
+
+	public boolean isNomunge() {
+		return nomunge;
+	}
+
+	public boolean isPreserveAllSemiColons() {
+		return preserveAllSemiColons;
+	}
+
+	public boolean isDisableOptimizations() {
+		return disableOptimizations;
+	}
+
+	public boolean isForce() {
+		return force;
+	}
+
+	public Aggregation[] getAggregations() {
+		return aggregations;
+	}
+
+	public boolean isGzip() {
+		return gzip;
+	}
+
+	public boolean isStatistics() {
+		return statistics;
+	}
+
+	public boolean isPreProcessAggregates() {
+		return preProcessAggregates;
+	}
+
+	public long getInSizeTotal_() {
+		return inSizeTotal_;
+	}
+
+	public long getOutSizeTotal_() {
+		return outSizeTotal_;
+	}
 }
