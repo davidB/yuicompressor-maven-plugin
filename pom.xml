@@ -8,7 +8,7 @@
 
   <groupId>net.alchim31.maven</groupId>
   <artifactId>yuicompressor-maven-plugin</artifactId>
-  <version>1.3.2-SNAPSHOT</version>
+  <version>1.3.3-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>YUI Compressor Maven Mojo</name>
@@ -16,7 +16,7 @@
   <inceptionYear>2012</inceptionYear>
   <description>
     To compress (Minify + Ofuscate) Javascript files and CSS
-    files (using YUI Compressor from Julien Lecomte) and/or to check
+    files (using YUI Compressor from Julien Lecomte or Google Closure Compiler) and/or to check
     Javascript files with jslint.
   </description>
 
@@ -85,6 +85,11 @@
   </dependencyManagement-->
 
   <dependencies>
+  	<dependency>
+      <groupId>com.google.javascript</groupId>
+      <artifactId>closure-compiler</artifactId>
+      <version>v20130411</version>
+  	</dependency>
     <dependency>
       <groupId>com.yahoo.platform.yui</groupId>
       <artifactId>yuicompressor</artifactId>
