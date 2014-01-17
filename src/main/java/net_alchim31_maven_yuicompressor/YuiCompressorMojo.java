@@ -198,8 +198,7 @@ public class YuiCompressorMojo extends MojoSupport {
             if (nocompress) {
                 getLog().info("No compression is enabled");
                 IOUtil.copy(in, out);
-            }
-            else if (".js".equalsIgnoreCase(src.getExtension())) {
+            } else if (".js".equalsIgnoreCase(src.getExtension())) {
                 JavaScriptCompressor compressor = new JavaScriptCompressor(in, jsErrorReporter_);
                 compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
             } else if (".css".equalsIgnoreCase(src.getExtension())) {
@@ -223,16 +222,16 @@ public class YuiCompressorMojo extends MojoSupport {
         }
     }
 
-	private void compressCss(InputStreamReader in, OutputStreamWriter out)
-			throws IOException {
-		try{
-		    CssCompressor compressor = new CssCompressor(in);
-		    compressor.compress(out, linebreakpos);
-		}catch(IllegalArgumentException e){
-			throw new IllegalArgumentException(
-					"Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again",e);
-		}
-	}
+    private void compressCss(InputStreamReader in, OutputStreamWriter out)
+            throws IOException {
+        try{
+            CssCompressor compressor = new CssCompressor(in);
+            compressor.compress(out, linebreakpos);
+        }catch(IllegalArgumentException e){
+            throw new IllegalArgumentException(
+                    "Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again",e);
+        }
+    }
 
     protected File gzipIfRequested(File file) throws Exception {
         if (!gzip || (file == null) || (!file.exists())) {
