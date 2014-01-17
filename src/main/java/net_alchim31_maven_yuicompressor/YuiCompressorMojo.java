@@ -121,6 +121,12 @@ public class YuiCompressorMojo extends MojoSupport {
      */
     private boolean preProcessAggregates;
 
+    /**
+     * use the input file as output when the compressed file is larger than the original
+     * @parameter expression="${maven.yuicompressor.useSmallestFile}" default-value="true"
+     */
+    private boolean useSmallestFile;
+
     private long inSizeTotal_;
     private long outSizeTotal_;
 
@@ -209,13 +215,30 @@ public class YuiCompressorMojo extends MojoSupport {
             IOUtil.close(in);
             IOUtil.close(out);
         }
-        FileUtils.forceDelete(outFile);
-        FileUtils.rename(outFileTmp, outFile);
+
+        boolean outputIgnored = useSmallestFile && inFile.length() < outFile.length();
+        if (outputIgnored) {
+            FileUtils.forceDelete(outFileTmp);
+            FileUtils.copyFile(inFile, outFile);
+            getLog().debug("output greater than input, using original instead");
+        } else {
+            FileUtils.forceDelete(outFile);
+            FileUtils.rename(outFileTmp, outFile);
+        }
+
         File gzipped = gzipIfRequested(outFile);
         if (statistics) {
             inSizeTotal_ += inFile.length();
             outSizeTotal_ += outFile.length();
-            getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile)));
+
+            String fileStatistics;
+            if (outputIgnored) {
+                fileStatistics = String.format("%s (%db) -> %s (%db)[compressed output discarded (exceeded input size)]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length());
+            } else {
+                fileStatistics = String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile));
+            }
+            getLog().info(fileStatistics);
+
             if (gzipped != null) {
                 getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), gzipped.getName(), gzipped.length(), ratioOfSize(inFile, gzipped)));
             }
