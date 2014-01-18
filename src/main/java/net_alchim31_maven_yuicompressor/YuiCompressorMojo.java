@@ -121,6 +121,12 @@ public class YuiCompressorMojo extends MojoSupport {
      */
     private boolean preProcessAggregates;
 
+    /**
+     * use the input file as output when the compressed file is larger than the original
+     * @parameter expression="${maven.yuicompressor.useSmallestFile}" default-value="true"
+     */
+    private boolean useSmallestFile;
+
     private long inSizeTotal_;
     private long outSizeTotal_;
 
@@ -198,8 +204,7 @@ public class YuiCompressorMojo extends MojoSupport {
             if (nocompress) {
                 getLog().info("No compression is enabled");
                 IOUtil.copy(in, out);
-            }
-            else if (".js".equalsIgnoreCase(src.getExtension())) {
+            } else if (".js".equalsIgnoreCase(src.getExtension())) {
                 JavaScriptCompressor compressor = new JavaScriptCompressor(in, jsErrorReporter_);
                 compressor.compress(out, linebreakpos, !nomunge, jswarn, preserveAllSemiColons, disableOptimizations);
             } else if (".css".equalsIgnoreCase(src.getExtension())) {
@@ -210,29 +215,46 @@ public class YuiCompressorMojo extends MojoSupport {
             IOUtil.close(in);
             IOUtil.close(out);
         }
-        FileUtils.forceDelete(outFile);
-        FileUtils.rename(outFileTmp, outFile);
+
+        boolean outputIgnored = useSmallestFile && inFile.length() < outFile.length();
+        if (outputIgnored) {
+            FileUtils.forceDelete(outFileTmp);
+            FileUtils.copyFile(inFile, outFile);
+            getLog().debug("output greater than input, using original instead");
+        } else {
+            FileUtils.forceDelete(outFile);
+            FileUtils.rename(outFileTmp, outFile);
+        }
+
         File gzipped = gzipIfRequested(outFile);
         if (statistics) {
             inSizeTotal_ += inFile.length();
             outSizeTotal_ += outFile.length();
-            getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile)));
+
+            String fileStatistics;
+            if (outputIgnored) {
+                fileStatistics = String.format("%s (%db) -> %s (%db)[compressed output discarded (exceeded input size)]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length());
+            } else {
+                fileStatistics = String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile));
+            }
+            getLog().info(fileStatistics);
+
             if (gzipped != null) {
                 getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), gzipped.getName(), gzipped.length(), ratioOfSize(inFile, gzipped)));
             }
         }
     }
 
-	private void compressCss(InputStreamReader in, OutputStreamWriter out)
-			throws IOException {
-		try{
-		    CssCompressor compressor = new CssCompressor(in);
-		    compressor.compress(out, linebreakpos);
-		}catch(IllegalArgumentException e){
-			throw new IllegalArgumentException(
-					"Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again",e);
-		}
-	}
+    private void compressCss(InputStreamReader in, OutputStreamWriter out)
+            throws IOException {
+        try{
+            CssCompressor compressor = new CssCompressor(in);
+            compressor.compress(out, linebreakpos);
+        }catch(IllegalArgumentException e){
+            throw new IllegalArgumentException(
+                    "Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again",e);
+        }
+    }
 
     protected File gzipIfRequested(File file) throws Exception {
         if (!gzip || (file == null) || (!file.exists())) {
