@@ -17,8 +17,9 @@ public class Aggregation {
     public String[] excludes;
     public boolean removeIncluded = false;
     public boolean insertNewLine = false;
+    public boolean insertFileHeader = false;
     public boolean fixLastSemicolon = false;
-    
+
     public void run() throws Exception {
         defineInputDir();
         List<File> files = getIncludedFiles();
@@ -33,9 +34,12 @@ public class Aggregation {
                     }
                     FileInputStream in = new FileInputStream(file);
                     try {
+                        if (insertFileHeader) {
+                            out.write(createFileHeader(file).getBytes());
+                        }
                         IOUtil.copy(in, out);
                         if (fixLastSemicolon) {
-                        	out.write(';');
+                            out.write(';');
                         }
                         if (insertNewLine) {
                             out.write('\n');
@@ -55,13 +59,26 @@ public class Aggregation {
         }
     }
 
+    private String createFileHeader(File file) {
+        StringBuilder header = new StringBuilder();
+        header.append("/*");
+        header.append(file.getName());
+        header.append("*/");
+
+        if (insertNewLine) {
+            header.append('\n');
+        }
+
+        return header.toString();
+    }
+
     private void defineInputDir() throws Exception {
       if (inputDir == null) {
         inputDir = output.getParentFile();
       }
       inputDir = inputDir.getCanonicalFile();
     }
-    
+
     private List<File> getIncludedFiles() throws Exception {
         ArrayList<File> back = new ArrayList<File>();
         if (includes != null) {
