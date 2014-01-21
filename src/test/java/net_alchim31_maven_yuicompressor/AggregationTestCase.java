@@ -1,6 +1,8 @@
 package net_alchim31_maven_yuicompressor;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
 
 import junit.framework.TestCase;
 
@@ -26,17 +28,17 @@ public class AggregationTestCase extends TestCase {
         target.output = new File(dir_, "output.js");
 
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertFalse(target.output.exists());
 
         target.includes = new String[]{};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertFalse(target.output.exists());
 
         target.includes = new String[]{"**/*.js"};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertFalse(target.output.exists());
     }
 
@@ -49,7 +51,7 @@ public class AggregationTestCase extends TestCase {
         target.includes = new String[]{f1.getName()};
 
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1), FileUtils.fileRead(target.output));
     }
@@ -66,14 +68,14 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f1.getName(), f2.getName()};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
 
         target.output.delete();
         target.includes = new String[]{"*.js"};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
@@ -90,14 +92,14 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f1.getName(), f1.getName(), f2.getName()};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
 
         target.output.delete();
         target.includes = new String[]{f1.getName(), "*.js"};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
@@ -114,7 +116,7 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f2.getName(), f1.getName()};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f2) + FileUtils.fileRead(f1), FileUtils.fileRead(target.output));
     }
@@ -132,7 +134,7 @@ public class AggregationTestCase extends TestCase {
         target.includes = new String[]{f1.getName(), f2.getName()};
 
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + "\n" + FileUtils.fileRead(f2) + "\n", FileUtils.fileRead(target.output));
     }
@@ -149,7 +151,7 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f1.getAbsolutePath(), f2.getName()};
         assertFalse(target.output.exists());
-        target.run();
+        target.run(null);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
@@ -167,11 +169,39 @@ public class AggregationTestCase extends TestCase {
 
             target.includes = new String[]{f1.getAbsolutePath(), f2.getName()};
             assertFalse(target.output.exists());
-            target.run();
+            target.run(null);
             assertTrue(target.output.exists());
             assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
         } finally {
             f1.delete();
         }
+    }
+
+    public void testAutoExcludeWildcards() throws Exception {
+        File f1 = new File(dir_, "01.js");
+        FileUtils.fileWrite(f1.getAbsolutePath(), "1");
+
+        File f2 = new File(dir_, "02.js");
+        FileUtils.fileWrite(f2.getAbsolutePath(), "22\n22");
+
+        Aggregation target = new Aggregation();
+        target.autoExcludeWildcards = true;
+        target.output = new File(dir_, "output.js");
+
+        Collection<File> previouslyIncluded = new HashSet<File>();
+        previouslyIncluded.add(f1);
+
+        target.includes = new String[]{f1.getName(), f2.getName()};
+        assertFalse(target.output.exists());
+        target.run(previouslyIncluded);
+        assertTrue(target.output.exists());
+        assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
+
+        target.output.delete();
+        target.includes = new String[]{"*.js"};
+        assertFalse(target.output.exists());
+        target.run(previouslyIncluded);
+        assertTrue(target.output.exists());
+        assertEquals(FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
 }
