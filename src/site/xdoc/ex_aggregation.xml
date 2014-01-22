@@ -135,6 +135,49 @@ However it would be great to be able to insert one at beginning of output file.
  ]]></source>
 
 </subsection>
+<subsection name="Adding filename headers">
+<p>When aggregating minified js or css files, the file headers have been stripped out.
+However it would be great to be able to easily identify the corresponding input files when looking at the aggregated file.
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <aggregations>
+           <aggregation>
+              <!-- insert new line after each concatenation (default: false) -->
+              <insertNewLine>true</insertNewLine>
+              <!-- insert file header before each aggregated file (default: false) -->
+              <insertFileHeader>true</insertFileHeader>
+              <output>${project.build.directory}/${project.build.finalName}/static/all-3.js</output>
+              <!-- files to include, path relative to output's directory -->
+              <includes>
+                <include>**/*.js</include>
+              </includes>
+            </aggregation>
+          </aggregations>
+        </configuration>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+</subsection>
 </section>
 </body>
 </document>
