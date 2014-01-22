@@ -178,6 +178,54 @@ However it would be great to be able to easily identify the corresponding input 
  ]]></source>
 </p>
 </subsection>
+<subsection name="Automatically exclude wildcard matches that were included in previous aggregations">
+<p>When multiple aggregations are defined for the same type of file, such as css, it can be tedious to maintain matching exclusions on the final aggregation which uses a wildcard inclusion.
+It would be convenient to automatically exclude wildcard matches that have been included in previous aggregations.
+<source><![CDATA[
+<project>
+...
+  <build>
+    <plugins>
+...
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>yuicompressor-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compress</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <aggregations>
+           <aggregation>
+              <output>${project.build.directory}/${project.build.finalName}/static/IE.css</output>
+              <!-- files to include, path relative to output's directory -->
+              <includes>
+                <include>**/IE*.css</include>
+              </includes>
+            </aggregation>
+           <aggregation>
+              <!-- exclude any wildcard matches that have been included by prior aggregations (default: false) -->
+              <autoExcludeWildcards>true</autoExcludeWildcards>
+              <output>${project.build.directory}/${project.build.finalName}/static/everything-except-IE.css</output>
+              <!-- files to include, path relative to output's directory -->
+              <includes>
+                <include>**/*.css</include>
+              </includes>
+            </aggregation>
+          </aggregations>
+        </configuration>
+      </plugin>
+...
+    </plugins>
+  </build>
+...
+</project>
+ ]]></source>
+</p>
+</subsection>
 </section>
 </body>
 </document>
