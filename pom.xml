@@ -60,6 +60,14 @@
       </roles>
       <timezone>+1</timezone>
     </contributor>
+    <contributor>
+      <name>Dave Hughes</name>
+      <email>dlh3@sfu.ca</email>
+      <roles>
+        <role>Contributor</role>
+      </roles>
+      <timezone>-8</timezone>
+    </contributor>
   </contributors>
 
   <properties>
