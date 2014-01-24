@@ -237,11 +237,11 @@ public class YuiCompressorMojo extends MojoSupport {
             } else {
                 fileStatistics = String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), outFile.getName(), outFile.length(), ratioOfSize(inFile, outFile));
             }
-            getLog().info(fileStatistics);
 
             if (gzipped != null) {
-                getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", inFile.getName(), inFile.length(), gzipped.getName(), gzipped.length(), ratioOfSize(inFile, gzipped)));
+                fileStatistics = fileStatistics + String.format(" -> %s (%db)[%d%%]", gzipped.getName(), gzipped.length(), ratioOfSize(inFile, gzipped));
             }
+            getLog().info(fileStatistics);
         }
     }
 
