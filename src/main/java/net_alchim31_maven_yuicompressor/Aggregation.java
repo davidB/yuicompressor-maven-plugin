@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.codehaus.plexus.util.DirectoryScanner;
@@ -18,10 +19,18 @@ public class Aggregation {
     public boolean removeIncluded = false;
     public boolean insertNewLine = false;
     public boolean fixLastSemicolon = false;
-    
-    public void run() throws Exception {
+    public boolean autoExcludeWildcards = false;
+
+    public List<File> run(Collection<File> previouslyIncludedFiles) throws Exception {
         defineInputDir();
-        List<File> files = getIncludedFiles();
+
+        List<File> files;
+        if (autoExcludeWildcards) {
+            files = getIncludedFiles(previouslyIncludedFiles);
+        } else {
+            files = getIncludedFiles(null);
+        }
+
         if (files.size() != 0) {
             output = output.getCanonicalFile();
             output.getParentFile().mkdirs();
@@ -35,7 +44,7 @@ public class Aggregation {
                     try {
                         IOUtil.copy(in, out);
                         if (fixLastSemicolon) {
-                        	out.write(';');
+                            out.write(';');
                         }
                         if (insertNewLine) {
                             out.write('\n');
@@ -53,7 +62,10 @@ public class Aggregation {
                 out = null;
             }
         }
+
+        return files;
     }
+
 
     private void defineInputDir() throws Exception {
       if (inputDir == null) {
@@ -61,18 +73,18 @@ public class Aggregation {
       }
       inputDir = inputDir.getCanonicalFile();
     }
-    
-    private List<File> getIncludedFiles() throws Exception {
-        ArrayList<File> back = new ArrayList<File>();
+
+    private List<File> getIncludedFiles(Collection<File> previouslyIncludedFiles) throws Exception {
+        List<File> filesToAggregate = new ArrayList<File>();
         if (includes != null) {
             for (String include : includes) {
-                addInto(include, back);
+                addInto(include, filesToAggregate, previouslyIncludedFiles);
             }
         }
-        return back;
+        return filesToAggregate;
     }
 
-    private void addInto(String include, List<File> includedFiles) throws Exception {
+    private void addInto(String include, List<File> includedFiles, Collection<File> previouslyIncludedFiles) throws Exception {
         if (include.indexOf('*') > -1) {
             DirectoryScanner scanner = newScanner();
             scanner.setIncludes(new String[] { include });
@@ -81,7 +93,7 @@ public class Aggregation {
             Arrays.sort(rpaths);
             for (String rpath : rpaths) {
                 File file = new File(scanner.getBasedir(), rpath);
-                if (!includedFiles.contains(file)) {
+                if (!includedFiles.contains(file) && (previouslyIncludedFiles == null || !previouslyIncludedFiles.contains(file))) {
                     includedFiles.add(file);
                 }
             }

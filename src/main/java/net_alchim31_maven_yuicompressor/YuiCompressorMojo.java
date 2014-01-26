@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -155,9 +158,12 @@ public class YuiCompressorMojo extends MojoSupport {
 
     private void aggregate() throws Exception {
         if (aggregations != null) {
+            Set<File> previouslyIncludedFiles = new HashSet<File>();
             for(Aggregation aggregation : aggregations) {
                 getLog().info("generate aggregation : " + aggregation.output);
-                aggregation.run();
+                Collection<File> aggregatedFiles = aggregation.run(previouslyIncludedFiles);
+                previouslyIncludedFiles.addAll(aggregatedFiles);
+
                 File gzipped = gzipIfRequested(aggregation.output);
                 if (statistics) {
                     if (gzipped != null) {
