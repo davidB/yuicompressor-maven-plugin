@@ -18,6 +18,7 @@ public class Aggregation {
     public String[] excludes;
     public boolean removeIncluded = false;
     public boolean insertNewLine = false;
+    public boolean insertFileHeader = false;
     public boolean fixLastSemicolon = false;
     public boolean autoExcludeWildcards = false;
 
@@ -42,6 +43,9 @@ public class Aggregation {
                     }
                     FileInputStream in = new FileInputStream(file);
                     try {
+                        if (insertFileHeader) {
+                            out.write(createFileHeader(file).getBytes());
+                        }
                         IOUtil.copy(in, out);
                         if (fixLastSemicolon) {
                             out.write(';');
@@ -62,10 +66,21 @@ public class Aggregation {
                 out = null;
             }
         }
-
         return files;
     }
 
+    private String createFileHeader(File file) {
+        StringBuilder header = new StringBuilder();
+        header.append("/*");
+        header.append(file.getName());
+        header.append("*/");
+
+        if (insertNewLine) {
+            header.append('\n');
+        }
+
+        return header.toString();
+    }
 
     private void defineInputDir() throws Exception {
       if (inputDir == null) {
