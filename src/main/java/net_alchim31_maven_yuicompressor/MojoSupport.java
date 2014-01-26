@@ -45,14 +45,14 @@ public abstract class MojoSupport extends AbstractMojo {
     /**
      * The output directory into which to copy the resources.
      *
-     * @parameter expression="${project.build.outputDirectory}"
+     * @parameter property="project.build.outputDirectory"
      */
     private File outputDirectory;
 
     /**
      * The list of resources we want to transfer.
      *
-     * @parameter expression="${project.resources}"
+     * @parameter property="project.resources"
      */
     private List<Resource> resources;
 
@@ -85,7 +85,7 @@ public abstract class MojoSupport extends AbstractMojo {
     private boolean excludeResources = false;
 
     /**
-     * @parameter expression="${project}"
+     * @parameter property="project"
      * @readonly
      * @required
      */
@@ -94,21 +94,21 @@ public abstract class MojoSupport extends AbstractMojo {
     /**
      * [js only] Display possible errors in the code
      *
-     * @parameter expression="${maven.yuicompressor.jswarn}" default-value="true"
+     * @parameter property="maven.yuicompressor.jswarn" default-value="true"
      */
     protected boolean jswarn;
 
     /**
      * Whether to skip execution.
      *
-     * @parameter expression="${maven.yuicompressor.skip}" default-value="false"
+     * @parameter property="maven.yuicompressor.skip" default-value="false"
      */
     private boolean skip;
 
     /**
      * define if plugin must stop/fail on warnings.
      *
-     * @parameter expression="${maven.yuicompressor.failOnWarning}" default-value="false"
+     * @parameter property="maven.yuicompressor.failOnWarning" default-value="false"
      */
     protected boolean failOnWarning;
     protected ErrorReporter4Mojo jsErrorReporter_;
