@@ -61,6 +61,7 @@
           <!--nomunge>true</nomunge-->
           <force>true</force>
           <gzip>true</gzip>
+          <useProcessedResources>true</useProcessedResources>
           <excludes>
             <exclude>**/*.pack.js</exclude>
             <exclude>**/compressed.css</exclude>

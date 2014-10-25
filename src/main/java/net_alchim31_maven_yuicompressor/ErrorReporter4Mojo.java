@@ -1,8 +1,10 @@
 package net_alchim31_maven_yuicompressor;
 
+import java.io.File;
 import org.apache.maven.plugin.logging.Log;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 public class ErrorReporter4Mojo implements ErrorReporter {
 
@@ -11,10 +13,13 @@ public class ErrorReporter4Mojo implements ErrorReporter {
     private Log log_;
     private int warningCnt_;
     private int errorCnt_;
+	private BuildContext buildContext_;
+	private File sourceFile_;
 
-    public ErrorReporter4Mojo(Log log, boolean jswarn) {
+    public ErrorReporter4Mojo(Log log, boolean jswarn, BuildContext buildContext) {
         log_ = log;
         acceptWarn_ = jswarn;
+        buildContext_=buildContext;
     }
 
     public void setDefaultFileName(String v) {
@@ -34,6 +39,7 @@ public class ErrorReporter4Mojo implements ErrorReporter {
 
     public void error(String message, String sourceName, int line, String lineSource, int lineOffset) {
         String fullMessage = newMessage(message, sourceName, line, lineSource, lineOffset);
+        buildContext_.addMessage(sourceFile_, line, lineOffset, message, BuildContext.SEVERITY_ERROR, null);
         log_.error(fullMessage);
         errorCnt_++;
     }
@@ -46,6 +52,7 @@ public class ErrorReporter4Mojo implements ErrorReporter {
     public void warning(String message, String sourceName, int line, String lineSource, int lineOffset) {
         if (acceptWarn_) {
             String fullMessage = newMessage(message, sourceName, line, lineSource, lineOffset);
+            buildContext_.addMessage(sourceFile_, line, lineOffset, message, BuildContext.SEVERITY_WARNING, null);
             log_.warn(fullMessage);
             warningCnt_++;
         }
@@ -77,5 +84,9 @@ public class ErrorReporter4Mojo implements ErrorReporter {
         }
         return back.toString();
     }
+
+	public void setFile(File file) {
+		sourceFile_=file;
+	}
 
 }
