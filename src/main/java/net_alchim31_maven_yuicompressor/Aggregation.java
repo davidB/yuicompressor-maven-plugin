@@ -3,6 +3,7 @@ package net_alchim31_maven_yuicompressor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +11,8 @@ import java.util.List;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.Scanner;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 public class Aggregation {
     public File inputDir;
@@ -22,20 +25,20 @@ public class Aggregation {
     public boolean fixLastSemicolon = false;
     public boolean autoExcludeWildcards = false;
 
-    public List<File> run(Collection<File> previouslyIncludedFiles) throws Exception {
+    public List<File> run(Collection<File> previouslyIncludedFiles, BuildContext buildContext) throws Exception {
         defineInputDir();
 
         List<File> files;
         if (autoExcludeWildcards) {
-            files = getIncludedFiles(previouslyIncludedFiles);
+            files = getIncludedFiles(previouslyIncludedFiles,buildContext);
         } else {
-            files = getIncludedFiles(null);
+            files = getIncludedFiles(null,buildContext);
         }
 
         if (files.size() != 0) {
             output = output.getCanonicalFile();
             output.getParentFile().mkdirs();
-            FileOutputStream out = new FileOutputStream(output);
+            OutputStream out = buildContext.newFileOutputStream( output );
             try {
                 for (File file : files) {
                     if (file.getCanonicalPath().equals(output.getCanonicalPath())) {
@@ -59,6 +62,7 @@ public class Aggregation {
                     }
                     if (removeIncluded) {
                         file.delete();
+                        buildContext.refresh(file);
                     }
                 }
             } finally {
@@ -89,14 +93,21 @@ public class Aggregation {
       inputDir = inputDir.getCanonicalFile();
     }
 
-    private List<File> getIncludedFiles(Collection<File> previouslyIncludedFiles) throws Exception {
+    private List<File> getIncludedFiles(Collection<File> previouslyIncludedFiles, BuildContext buildContext) throws Exception {
         List<File> filesToAggregate = new ArrayList<File>();
         if (includes != null) {
             for (String include : includes) {
                 addInto(include, filesToAggregate, previouslyIncludedFiles);
             }
         }
-        return filesToAggregate;
+        
+        //If build is incremental with no delta, then don't include for aggregation
+        if(buildContext.isIncremental() && !buildContext.hasDelta(filesToAggregate)){
+        	return new ArrayList<File>();
+        } else{
+        	return filesToAggregate;
+        }
+        
     }
 
     private void addInto(String include, List<File> includedFiles, Collection<File> previouslyIncludedFiles) throws Exception {

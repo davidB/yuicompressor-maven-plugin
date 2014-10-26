@@ -161,7 +161,7 @@ public class YuiCompressorMojo extends MojoSupport {
             Set<File> previouslyIncludedFiles = new HashSet<File>();
             for(Aggregation aggregation : aggregations) {
                 getLog().info("generate aggregation : " + aggregation.output);
-                Collection<File> aggregatedFiles = aggregation.run(previouslyIncludedFiles);
+                Collection<File> aggregatedFiles = aggregation.run(previouslyIncludedFiles,buildContext);
                 previouslyIncludedFiles.addAll(aggregatedFiles);
 
                 File gzipped = gzipIfRequested(aggregation.output);
@@ -206,7 +206,7 @@ public class YuiCompressorMojo extends MojoSupport {
             getLog().debug("use a temporary outputfile (in case in == out)");
 
             getLog().debug("start compression");
-            out = new OutputStreamWriter(new FileOutputStream(outFileTmp), encoding);
+            out = new OutputStreamWriter(buildContext.newFileOutputStream(outFileTmp), encoding);
             if (nocompress) {
                 getLog().info("No compression is enabled");
                 IOUtil.copy(in, out);
@@ -230,6 +230,8 @@ public class YuiCompressorMojo extends MojoSupport {
         } else {
             FileUtils.forceDelete(outFile);
             FileUtils.rename(outFileTmp, outFile);
+            buildContext.refresh(outFile);
+            buildContext.refresh(outFileTmp);
         }
 
         File gzipped = gzipIfRequested(outFile);
@@ -274,7 +276,7 @@ public class YuiCompressorMojo extends MojoSupport {
         GZIPOutputStream out = null;
         FileInputStream in = null;
         try {
-            out = new GZIPOutputStream(new FileOutputStream(gzipped));
+            out = new GZIPOutputStream(buildContext.newFileOutputStream(gzipped));
             in = new FileInputStream(file);
             IOUtil.copy(in, out);
         } finally {
