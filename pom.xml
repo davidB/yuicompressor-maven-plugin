@@ -68,6 +68,14 @@
       </roles>
       <timezone>-8</timezone>
     </contributor>
+    <contributor>
+      <name>Aneesh Joseph</name>
+      <email>admin@coderplus.com</email>
+      <roles>
+        <role>Contributor</role>
+      </roles>
+      <timezone>+5.5</timezone>
+    </contributor>
   </contributors>
 
   <properties>
