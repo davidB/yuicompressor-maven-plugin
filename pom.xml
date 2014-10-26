@@ -8,7 +8,7 @@
 
   <groupId>net.alchim31.maven</groupId>
   <artifactId>yuicompressor-maven-plugin</artifactId>
-  <version>1.5.0-SNAPSHOT</version>
+  <version>1.5.0</version>
   <packaging>maven-plugin</packaging>
 
   <name>YUI Compressor Maven Mojo</name>
@@ -32,7 +32,7 @@
     <connection>scm:git:git://github.com/davidB/${project.artifactId}.git</connection>
     <developerConnection>scm:git:git@github.com:davidB/${project.artifactId}.git</developerConnection>
     <url>https://github.com/davidB/${project.artifactId}/</url>
-    <tag>HEAD</tag>
+    <tag>1.5.0</tag>
   </scm>
 
   <issueManagement>
