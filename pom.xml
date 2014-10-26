@@ -8,7 +8,7 @@
 
   <groupId>net.alchim31.maven</groupId>
   <artifactId>yuicompressor-maven-plugin</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>YUI Compressor Maven Mojo</name>
@@ -106,6 +106,8 @@
     <dependency>
       <groupId>com.yahoo.platform.yui</groupId>
       <artifactId>yuicompressor</artifactId>
+      <!-- 2.4.8 seems to have issue on windows : https://github.com/yui/yuicompressor/issues/78 -->
+      <!-- 2.4.8 failed to process empty file (demo01) : https://github.com/yui/yuicompressor/issues/130 -->
       <version>2.4.7</version>
     </dependency>
     <dependency>
