@@ -64,28 +64,28 @@ public abstract class MojoSupport extends AbstractMojo {
      * @parameter
      */
     private List<String> excludes;
-    
+
     /**
      * Use processed resources if available
-     * 
+     *
      * @parameter default-value="false"
      */
     private boolean useProcessedResources;
 
     /**
      * list of additional includes
-     * 
+     *
      * @parameter
      */
     private List<String> includes;
-    
+
     /**
      * Excludes files from webapp directory
-     * 
+     *
      * @parameter
      */
     private boolean excludeWarSourceDirectory = false;
-    
+
     /**
      * Excludes files from resources directories.
      *
@@ -120,13 +120,12 @@ public abstract class MojoSupport extends AbstractMojo {
      * @parameter property="maven.yuicompressor.failOnWarning" default-value="false"
      */
     protected boolean failOnWarning;
-    
+
     /** @component */
    	protected BuildContext buildContext;
-    
+
     protected ErrorReporter4Mojo jsErrorReporter_;
 
-    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
             if (skip) {
@@ -173,7 +172,7 @@ public abstract class MojoSupport extends AbstractMojo {
 
     /**
      * Force to use defaultIncludes (ignore srcIncludes) to avoid processing resources/includes from other type than *.css or *.js
-     * @see https://github.com/davidB/yuicompressor-maven-plugin/issues/19 
+     * @see https://github.com/davidB/yuicompressor-maven-plugin/issues/19
      */
     protected void processDir(File srcRoot, File destRoot, List<String> srcExcludes, boolean destAsSource) throws Exception {
         if ((srcRoot == null) || ( !srcRoot.exists() )) {
@@ -185,7 +184,7 @@ public abstract class MojoSupport extends AbstractMojo {
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setBasedir(srcRoot);
         Scanner incrementalScanner = buildContext.newScanner(srcRoot);
-        
+
         if (includes == null) {
         	scanner.setIncludes(getDefaultIncludes());
         	incrementalScanner.setIncludes(getDefaultIncludes());
@@ -193,7 +192,7 @@ public abstract class MojoSupport extends AbstractMojo {
         	scanner.setIncludes(includes.toArray(new String[0]));
         	incrementalScanner.setIncludes(includes.toArray(new String[0]));
         }
-        
+
         if ( (srcExcludes != null) && !srcExcludes.isEmpty() ) {
             scanner.setExcludes( srcExcludes.toArray( EMPTY_STRING_ARRAY ) );
         }

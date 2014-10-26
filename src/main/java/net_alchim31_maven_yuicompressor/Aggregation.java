@@ -2,7 +2,6 @@ package net_alchim31_maven_yuicompressor;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +10,6 @@ import java.util.List;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.Scanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 public class Aggregation {
@@ -100,14 +98,14 @@ public class Aggregation {
                 addInto(include, filesToAggregate, previouslyIncludedFiles);
             }
         }
-        
+
         //If build is incremental with no delta, then don't include for aggregation
         if(buildContext.isIncremental() && !buildContext.hasDelta(filesToAggregate)){
         	return new ArrayList<File>();
         } else{
         	return filesToAggregate;
         }
-        
+
     }
 
     private void addInto(String include, List<File> includedFiles, Collection<File> previouslyIncludedFiles) throws Exception {
