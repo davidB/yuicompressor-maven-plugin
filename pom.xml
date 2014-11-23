@@ -79,7 +79,7 @@
   </contributors>
 
   <properties>
-    <maven.version>3.1.1</maven.version>
+    <maven.version>3.0.4</maven.version>
     <runtime.log>target/velocity.log</runtime.log>
     <maven.reporting.version>3.0</maven.reporting.version>
     <maven.compiler.source>1.6</maven.compiler.source>
