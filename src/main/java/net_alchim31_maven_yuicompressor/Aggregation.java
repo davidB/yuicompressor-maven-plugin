@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
@@ -24,13 +25,17 @@ public class Aggregation {
     public boolean autoExcludeWildcards = false;
 
     public List<File> run(Collection<File> previouslyIncludedFiles, BuildContext buildContext) throws Exception {
+    	return this.run(previouslyIncludedFiles, buildContext, null);
+    }
+
+    public List<File> run(Collection<File> previouslyIncludedFiles, BuildContext buildContext, Set<String> incrementalFiles) throws Exception {
         defineInputDir();
 
         List<File> files;
         if (autoExcludeWildcards) {
-            files = getIncludedFiles(previouslyIncludedFiles,buildContext);
+            files = getIncludedFiles(previouslyIncludedFiles,buildContext,incrementalFiles);
         } else {
-            files = getIncludedFiles(null,buildContext);
+            files = getIncludedFiles(null,buildContext,incrementalFiles);
         }
 
         if (files.size() != 0) {
@@ -91,7 +96,7 @@ public class Aggregation {
       inputDir = inputDir.getCanonicalFile();
     }
 
-    private List<File> getIncludedFiles(Collection<File> previouslyIncludedFiles, BuildContext buildContext) throws Exception {
+    private List<File> getIncludedFiles(Collection<File> previouslyIncludedFiles, BuildContext buildContext, Set<String> incrementalFiles) throws Exception {
         List<File> filesToAggregate = new ArrayList<File>();
         if (includes != null) {
             for (String include : includes) {
@@ -100,7 +105,21 @@ public class Aggregation {
         }
 
         //If build is incremental with no delta, then don't include for aggregation
-        if(buildContext.isIncremental() && !buildContext.hasDelta(filesToAggregate)){
+        if(buildContext.isIncremental()){
+
+        	if(incrementalFiles != null){
+            	boolean aggregateMustBeUpdated = false;
+                for (File file : filesToAggregate) {
+                	if(incrementalFiles.contains(file.getAbsolutePath())){
+                		aggregateMustBeUpdated = true;
+                		break;
+                	}
+        		}
+
+                if(aggregateMustBeUpdated){
+                	return filesToAggregate;
+                }
+        	}
         	return new ArrayList<File>();
         } else{
         	return filesToAggregate;

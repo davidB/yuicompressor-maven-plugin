@@ -132,6 +132,11 @@ public class YuiCompressorMojo extends MojoSupport {
     private long inSizeTotal_;
     private long outSizeTotal_;
 
+    /**
+     * Keep track of updated files for aggregation on incremental builds
+     */
+    private Set<String> incrementalFiles = null;
+
     @Override
     protected String[] getDefaultIncludes() throws Exception {
         return new String[]{"**/*.css", "**/*.js"};
@@ -160,7 +165,7 @@ public class YuiCompressorMojo extends MojoSupport {
             Set<File> previouslyIncludedFiles = new HashSet<File>();
             for(Aggregation aggregation : aggregations) {
                 getLog().info("generate aggregation : " + aggregation.output);
-                Collection<File> aggregatedFiles = aggregation.run(previouslyIncludedFiles,buildContext);
+                Collection<File> aggregatedFiles = aggregation.run(previouslyIncludedFiles,buildContext, incrementalFiles);
                 previouslyIncludedFiles.addAll(aggregatedFiles);
 
                 File gzipped = gzipIfRequested(aggregation.output);
@@ -179,10 +184,24 @@ public class YuiCompressorMojo extends MojoSupport {
 
     @Override
     protected void processFile(SourceFile src) throws Exception {
+        File inFile = src.toFile();
+        getLog().debug("on incremental build only compress if input file has Delta");
+        if(buildContext.isIncremental()){
+            if(!buildContext.hasDelta(inFile)){
+                if (getLog().isInfoEnabled()) {
+                    getLog().info("nothing to do, " + inFile + " has no Delta");
+                }
+            	return;
+            }
+            if(incrementalFiles == null){
+            	incrementalFiles = new HashSet<String>();
+            }
+        }
+
         if (getLog().isDebugEnabled()) {
             getLog().debug("compress file :" + src.toFile()+ " to " + src.toDestFile(suffix));
         }
-        File inFile = src.toFile();
+
         File outFile = src.toDestFile(suffix);
 
         getLog().debug("only compress if input file is younger than existing output file");
@@ -231,6 +250,10 @@ public class YuiCompressorMojo extends MojoSupport {
             FileUtils.rename(outFileTmp, outFile);
             buildContext.refresh(outFile);
             buildContext.refresh(outFileTmp);
+        }
+
+        if(buildContext.isIncremental()){
+            incrementalFiles.add(outFile.getAbsolutePath());
         }
 
         File gzipped = gzipIfRequested(outFile);
