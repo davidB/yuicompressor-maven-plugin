@@ -99,9 +99,14 @@ public class Aggregation {
             }
         }
 
+        List<String> filesToAggregateStr = new ArrayList<String>();
+        for (File file : filesToAggregate) {
+			filesToAggregateStr.add(file.getAbsolutePath());
+		}
+
         //If build is incremental with no delta, then don't include for aggregation
-        if(buildContext.isIncremental() && !buildContext.hasDelta(filesToAggregate)){
-        	return new ArrayList<File>();
+        if(buildContext.isIncremental() && !buildContext.hasDelta(filesToAggregateStr)){
+        	return filesToAggregate;
         } else{
         	return filesToAggregate;
         }
