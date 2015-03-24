@@ -106,7 +106,7 @@ public class Aggregation {
 
         //If build is incremental with no delta, then don't include for aggregation
         if(buildContext.isIncremental() && !buildContext.hasDelta(filesToAggregateStr)){
-        	return filesToAggregate;
+        	return new ArrayList<File>();
         } else{
         	return filesToAggregate;
         }
