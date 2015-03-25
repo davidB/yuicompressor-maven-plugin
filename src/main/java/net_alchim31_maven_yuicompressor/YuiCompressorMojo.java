@@ -2,6 +2,7 @@ package net_alchim31_maven_yuicompressor;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -224,7 +225,8 @@ public class YuiCompressorMojo extends MojoSupport {
             getLog().debug("use a temporary outputfile (in case in == out)");
 
             getLog().debug("start compression");
-            out = new OutputStreamWriter(buildContext.newFileOutputStream(outFileTmp), encoding);
+            /* outFileTmp will be deleted create with FileOutputStream  */
+            out = new OutputStreamWriter(new FileOutputStream(outFileTmp), encoding);
             if (nocompress) {
                 getLog().info("No compression is enabled");
                 IOUtil.copy(in, out);
@@ -249,7 +251,6 @@ public class YuiCompressorMojo extends MojoSupport {
             FileUtils.forceDelete(outFile);
             FileUtils.rename(outFileTmp, outFile);
             buildContext.refresh(outFile);
-            buildContext.refresh(outFileTmp);
         }
 
         if(buildContext.isIncremental()){
