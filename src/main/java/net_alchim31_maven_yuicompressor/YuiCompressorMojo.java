@@ -115,7 +115,7 @@ public class YuiCompressorMojo extends MojoSupport {
      *
      * @parameter property="maven.yuicompressor.level" default-value="9"
      */
-    private boolean lavel;
+    private int level;
 
     /**
      * show statistics (compression ratio).
@@ -284,8 +284,8 @@ public class YuiCompressorMojo extends MojoSupport {
         try {
             out = new GZIPOutputStream(buildContext.newFileOutputStream(gzipped)){
                 {
-				    def.setLevel(level);
-			    }
+			def.setLevel(level);
+		}
             };
             in = new FileInputStream(file);
             IOUtil.copy(in, out);
