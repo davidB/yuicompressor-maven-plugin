@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -109,7 +111,7 @@ public class YuiCompressorMojo extends MojoSupport {
      * @parameter property="maven.yuicompressor.gzip" default-value="false"
      */
     private boolean gzip;
-    
+
     /**
      * gzip level
      *
@@ -191,7 +193,13 @@ public class YuiCompressorMojo extends MojoSupport {
         }
         File inFile = src.toFile();
         File outFile = src.toDestFile(suffix);
-
+        if (isMinifiedFile(inFile)) {
+            return;
+        }
+        if (minifiedFileExistsInSource(inFile, outFile)) {
+            getLog().info("compressed file " + outFile.getAbsolutePath() + " already exists in the source directory: " + inFile.getAbsolutePath());
+            return;
+        }
         getLog().debug("only compress if input file is younger than existing output file");
         if (!force && outFile.exists() && (outFile.lastModified() > inFile.lastModified())) {
             if (getLog().isInfoEnabled()) {
@@ -199,7 +207,6 @@ public class YuiCompressorMojo extends MojoSupport {
             }
             return;
         }
-
         InputStreamReader in = null;
         OutputStreamWriter out = null;
         File outFileTmp = new File(outFile.getAbsolutePath() + ".tmp");
@@ -284,8 +291,8 @@ public class YuiCompressorMojo extends MojoSupport {
         try {
             out = new GZIPOutputStream(buildContext.newFileOutputStream(gzipped)){
                 {
-			def.setLevel(level);
-		}
+                    def.setLevel(level);
+                }
             };
             in = new FileInputStream(file);
             IOUtil.copy(in, out);
@@ -300,5 +307,23 @@ public class YuiCompressorMojo extends MojoSupport {
         long v100 = Math.max(file100.length(), 1);
         long vX = Math.max(fileX.length(), 1);
         return (vX * 100)/v100;
+    }
+
+    private boolean isMinifiedFile(File inFile) {
+        String filename = inFile.getName().toLowerCase();
+        if (filename.endsWith(suffix + ".js") || filename.endsWith(suffix + ".css")) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean minifiedFileExistsInSource(File source, File dest) throws InterruptedException {
+        String parent = source.getParent();
+        String destFilename = dest.getName();
+        File file = new File(parent + File.separator + destFilename);
+        if (file.exists()) {
+            return true;
+        }
+        return false;
     }
 }
