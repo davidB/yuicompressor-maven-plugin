@@ -205,6 +205,6 @@ public class AggregationTestCase extends TestCase {
         assertFalse(target.output.exists());
         target.run(previouslyIncluded,defaultBuildContext);
         assertTrue(target.output.exists());
-        assertEquals(FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
+        assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
 }

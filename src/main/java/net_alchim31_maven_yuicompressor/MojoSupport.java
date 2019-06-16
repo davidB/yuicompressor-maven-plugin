@@ -175,22 +175,30 @@ public abstract class MojoSupport extends AbstractMojo {
      * @see https://github.com/davidB/yuicompressor-maven-plugin/issues/19
      */
     protected void processDir(File srcRoot, File destRoot, List<String> srcExcludes, boolean destAsSource) throws Exception {
-        if ((srcRoot == null) || ( !srcRoot.exists() )) {
+        if (srcRoot == null) {
+            return;
+        }
+        if (!srcRoot.exists()) {
+            buildContext.addMessage(srcRoot, 0, 0, "Directory " + srcRoot.getPath() + " does not exists", BuildContext.SEVERITY_WARNING, null);
+            getLog().info("Directory " + srcRoot.getPath() + " does not exists");
             return;
         }
         if (destRoot == null) {
             throw new MojoFailureException("destination directory for " + srcRoot + " is null");
         }
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir(srcRoot);
-        Scanner incrementalScanner = buildContext.newScanner(srcRoot);
+        Scanner scanner = new DirectoryScanner();
+        if(!buildContext.isIncremental()){
+            DirectoryScanner dScanner = new DirectoryScanner();
+            dScanner.setBasedir(srcRoot);
+            scanner = dScanner;
+        }else{
+            scanner = buildContext.newScanner(srcRoot);
+        }
 
         if (includes == null) {
-        	scanner.setIncludes(getDefaultIncludes());
-        	incrementalScanner.setIncludes(getDefaultIncludes());
+            scanner.setIncludes(getDefaultIncludes());
         } else {
-        	scanner.setIncludes(includes.toArray(new String[0]));
-        	incrementalScanner.setIncludes(includes.toArray(new String[0]));
+            scanner.setIncludes(includes.toArray(new String[0]));
         }
 
         if ( (srcExcludes != null) && !srcExcludes.isEmpty() ) {
@@ -200,16 +208,19 @@ public abstract class MojoSupport extends AbstractMojo {
             scanner.setExcludes( excludes.toArray( EMPTY_STRING_ARRAY ) );
         }
         scanner.addDefaultExcludes();
-        incrementalScanner.addDefaultExcludes();
-        if(buildContext.isIncremental()){
-        	incrementalScanner.scan();
-        	if(incrementalScanner.getIncludedFiles() == null ||incrementalScanner.getIncludedFiles().length ==0 ){
-        		getLog().info("No files have changed, so skipping the processing");
-        		return;
-        	}
-        }
+
         scanner.scan();
-        for(String name :scanner.getIncludedFiles() ) {
+
+        String[] includedFiles = scanner.getIncludedFiles();
+        if(includedFiles == null || includedFiles.length == 0){
+            if(buildContext.isIncremental()){
+                getLog().info("No files have changed, so skipping the processing");
+            }else{
+                getLog().info("No files to be processed");
+            }
+            return;
+        }
+        for(String name :includedFiles ) {
             SourceFile src = new SourceFile(srcRoot, destRoot, name, destAsSource);
             jsErrorReporter_.setDefaultFileName("..." + src.toFile().getAbsolutePath().substring(src.toFile().getAbsolutePath().lastIndexOf('/')+1));
             jsErrorReporter_.setFile(src.toFile());
