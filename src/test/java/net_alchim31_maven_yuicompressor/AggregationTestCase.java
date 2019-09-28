@@ -1,5 +1,6 @@
 package net_alchim31_maven_yuicompressor;
 
+import com.google.common.collect.Lists;
 import junit.framework.TestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.sonatype.plexus.build.incremental.DefaultBuildContext;
@@ -202,8 +203,9 @@ public class AggregationTestCase extends TestCase {
         target.output.delete();
         target.includes = new String[]{"*.js"};
         assertFalse(target.output.exists());
-        target.run(previouslyIncluded, defaultBuildContext);
+        //f1 was in previouslyIncluded so it is not included
+        assertEquals(target.run(previouslyIncluded, defaultBuildContext), Lists.newArrayList(f2));
         assertTrue(target.output.exists());
-        assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
+        assertEquals(FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
 }
