@@ -35,32 +35,20 @@
 
 package net_alchim31_maven_yuicompressor;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
 import org.codehaus.plexus.util.IOUtil;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ErrorReporter;
-import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.JavaScriptException;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.WrappedException;
+import org.mozilla.javascript.*;
+
+import java.io.*;
 
 /**
  * The BasicRhinoShell program.
- *
+ * <p>
  * Can execute scripts interactively or in batch mode at the command line. An
  * example of controlling the JavaScript engine.
  *
  * @author Norris Boyd
  * @based http://lxr.mozilla.org/mozilla/source/js/rhino/examples/BasicRhinoShell.java
- *        (2007-08-30)
+ * (2007-08-30)
  */
 @SuppressWarnings("serial")
 public class BasicRhinoShell extends ScriptableObject {
@@ -72,12 +60,12 @@ public class BasicRhinoShell extends ScriptableObject {
 
     /**
      * Main entry point.
-     *
+     * <p>
      * Process arguments as would a normal Java program. Also create a new
      * Context and associate it with the current thread. Then set up the
      * execution environment and begin to execute scripts.
      */
-    public static void exec(String args[], ErrorReporter reporter) {
+    public static void exec(String[] args, ErrorReporter reporter) {
         // Associate a new Context with this thread
         Context cx = Context.enter();
         cx.setErrorReporter(reporter);
@@ -90,7 +78,7 @@ public class BasicRhinoShell extends ScriptableObject {
             // Define some global functions particular to the BasicRhinoShell.
             // Note
             // that these functions are not part of ECMA.
-            String[] names = { "print", "quit", "version", "load", "help", "readFile", "warn" };
+            String[] names = {"print", "quit", "version", "load", "help", "readFile", "warn"};
             BasicRhinoShell.defineFunctionProperties(names, BasicRhinoShell.class, ScriptableObject.DONTENUM);
 
             args = processOptions(cx, args);
@@ -117,7 +105,7 @@ public class BasicRhinoShell extends ScriptableObject {
     /**
      * Parse arguments.
      */
-    public static String[] processOptions(Context cx, String args[]) {
+    public static String[] processOptions(Context cx, String[] args) {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (!arg.startsWith("-")) {
@@ -155,7 +143,7 @@ public class BasicRhinoShell extends ScriptableObject {
 
     /**
      * Print a help message.
-     *
+     * <p>
      * This method is defined as a JavaScript function.
      */
     public void help() {
@@ -179,11 +167,10 @@ public class BasicRhinoShell extends ScriptableObject {
 
     /**
      * Print the string values of its arguments.
-     *
+     * <p>
      * This method is defined as a JavaScript function. Note that its arguments
      * are of the "varargs" form, which allows it to handle an arbitrary number
      * of arguments supplied to the JavaScript function.
-     *
      */
     public static void print(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
         for (int i = 0; i < args.length; i++) {
@@ -201,9 +188,9 @@ public class BasicRhinoShell extends ScriptableObject {
 
     /**
      * Quit the BasicRhinoShell.
-     *
+     * <p>
      * This only affects the interactive mode.
-     *
+     * <p>
      * This method is defined as a JavaScript function.
      */
     public void quit() {
@@ -211,11 +198,11 @@ public class BasicRhinoShell extends ScriptableObject {
     }
 
     public static void warn(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
-        String message = Context.toString( args[ 0 ] );
-        int line = (int) Context.toNumber( args[ 1 ] );
-        String source = Context.toString( args[ 2 ] );
-        int column = (int) Context.toNumber( args[ 3 ] );
-        cx.getErrorReporter().warning( message, null, line, source, column );
+        String message = Context.toString(args[0]);
+        int line = (int) Context.toNumber(args[1]);
+        String source = Context.toString(args[2]);
+        int column = (int) Context.toNumber(args[3]);
+        cx.getErrorReporter().warning(message, null, line, source, column);
     }
 
     /**
@@ -233,7 +220,7 @@ public class BasicRhinoShell extends ScriptableObject {
 
     /**
      * Get and set the language version.
-     *
+     * <p>
      * This method is defined as a JavaScript function.
      */
     public static double version(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
@@ -247,9 +234,8 @@ public class BasicRhinoShell extends ScriptableObject {
 
     /**
      * Load and execute a set of JavaScript source files.
-     *
+     * <p>
      * This method is defined as a JavaScript function.
-     *
      */
     public static void load(Context cx, Scriptable thisObj, Object[] args, Function funObj) {
         BasicRhinoShell BasicRhinoShell = (BasicRhinoShell) getTopLevelScope(thisObj);
@@ -261,9 +247,9 @@ public class BasicRhinoShell extends ScriptableObject {
     /**
      * Evaluate JavaScript source.
      *
-     * @param cx the current context
+     * @param cx       the current context
      * @param filename the name of the file to compile, or null for interactive
-     *            mode.
+     *                 mode.
      */
     private void processSource(Context cx, String filename) {
         if (filename == null) {

@@ -1,11 +1,11 @@
 package net_alchim31_maven_yuicompressor;
 
+import org.codehaus.plexus.util.IOUtil;
+import org.mozilla.javascript.ErrorReporter;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-
-import org.codehaus.plexus.util.IOUtil;
-import org.mozilla.javascript.ErrorReporter;
 
 //TODO: use MojoErrorReporter
 class JSLintChecker {

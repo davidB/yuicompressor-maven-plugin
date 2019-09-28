@@ -4,10 +4,9 @@ package net_alchim31_maven_yuicompressor;
 /**
  * Check JS files with jslint.
  *
+ * @author David Bernard
  * @goal jslint
  * @phase process-resources
- *
- * @author David Bernard
  * @created 2007-08-29
  * @threadSafe
  */
@@ -17,7 +16,7 @@ public class JSLintMojo extends MojoSupport {
 
     @Override
     protected String[] getDefaultIncludes() throws Exception {
-        return new String[] { "**/**.js" };
+        return new String[]{"**/**.js"};
     }
 
     @Override

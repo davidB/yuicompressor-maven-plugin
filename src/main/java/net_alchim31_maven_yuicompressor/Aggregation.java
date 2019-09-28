@@ -1,17 +1,13 @@
 package net_alchim31_maven_yuicompressor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.IOUtil;
 import org.sonatype.plexus.build.incremental.BuildContext;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.util.*;
 
 public class Aggregation {
     public File inputDir;
@@ -25,7 +21,7 @@ public class Aggregation {
     public boolean autoExcludeWildcards = false;
 
     public List<File> run(Collection<File> previouslyIncludedFiles, BuildContext buildContext) throws Exception {
-    	return this.run(previouslyIncludedFiles, buildContext, null);
+        return this.run(previouslyIncludedFiles, buildContext, null);
     }
 
     public List<File> run(Collection<File> previouslyIncludedFiles, BuildContext buildContext, Set<String> incrementalFiles) throws Exception {
@@ -33,15 +29,15 @@ public class Aggregation {
 
         List<File> files;
         if (autoExcludeWildcards) {
-            files = getIncludedFiles(previouslyIncludedFiles,buildContext,incrementalFiles);
+            files = getIncludedFiles(previouslyIncludedFiles, buildContext, incrementalFiles);
         } else {
-            files = getIncludedFiles(null,buildContext,incrementalFiles);
+            files = getIncludedFiles(null, buildContext, incrementalFiles);
         }
 
         if (files.size() != 0) {
             output = output.getCanonicalFile();
             output.getParentFile().mkdirs();
-            OutputStream out = buildContext.newFileOutputStream( output );
+            OutputStream out = buildContext.newFileOutputStream(output);
             try {
                 for (File file : files) {
                     if (file.getCanonicalPath().equals(output.getCanonicalPath())) {
@@ -90,10 +86,10 @@ public class Aggregation {
     }
 
     private void defineInputDir() throws Exception {
-      if (inputDir == null) {
-        inputDir = output.getParentFile();
-      }
-      inputDir = inputDir.getCanonicalFile();
+        if (inputDir == null) {
+            inputDir = output.getParentFile();
+        }
+        inputDir = inputDir.getCanonicalFile();
     }
 
     private List<File> getIncludedFiles(Collection<File> previouslyIncludedFiles, BuildContext buildContext, Set<String> incrementalFiles) throws Exception {
@@ -105,24 +101,24 @@ public class Aggregation {
         }
 
         //If build is incremental with no delta, then don't include for aggregation
-        if(buildContext.isIncremental()){
+        if (buildContext.isIncremental()) {
 
-        	if(incrementalFiles != null){
-            	boolean aggregateMustBeUpdated = false;
+            if (incrementalFiles != null) {
+                boolean aggregateMustBeUpdated = false;
                 for (File file : filesToAggregate) {
-                	if(incrementalFiles.contains(file.getAbsolutePath())){
-                		aggregateMustBeUpdated = true;
-                		break;
-                	}
-        		}
-
-                if(aggregateMustBeUpdated){
-                	return filesToAggregate;
+                    if (incrementalFiles.contains(file.getAbsolutePath())) {
+                        aggregateMustBeUpdated = true;
+                        break;
+                    }
                 }
-        	}
-        	return new ArrayList<File>();
-        } else{
-        	return filesToAggregate;
+
+                if (aggregateMustBeUpdated) {
+                    return filesToAggregate;
+                }
+            }
+            return new ArrayList<File>();
+        } else {
+            return filesToAggregate;
         }
 
     }
@@ -130,7 +126,7 @@ public class Aggregation {
     private void addInto(String include, List<File> includedFiles, Collection<File> previouslyIncludedFiles) throws Exception {
         if (include.indexOf('*') > -1) {
             DirectoryScanner scanner = newScanner();
-            scanner.setIncludes(new String[] { include });
+            scanner.setIncludes(new String[]{include});
             scanner.scan();
             String[] rpaths = scanner.getIncludedFiles();
             Arrays.sort(rpaths);

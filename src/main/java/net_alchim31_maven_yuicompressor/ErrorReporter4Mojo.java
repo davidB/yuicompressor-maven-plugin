@@ -1,10 +1,11 @@
 package net_alchim31_maven_yuicompressor;
 
-import java.io.File;
 import org.apache.maven.plugin.logging.Log;
 import org.mozilla.javascript.ErrorReporter;
 import org.mozilla.javascript.EvaluatorException;
 import org.sonatype.plexus.build.incremental.BuildContext;
+
+import java.io.File;
 
 public class ErrorReporter4Mojo implements ErrorReporter {
 
@@ -13,13 +14,13 @@ public class ErrorReporter4Mojo implements ErrorReporter {
     private Log log_;
     private int warningCnt_;
     private int errorCnt_;
-	private BuildContext buildContext_;
-	private File sourceFile_;
+    private BuildContext buildContext_;
+    private File sourceFile_;
 
     public ErrorReporter4Mojo(Log log, boolean jswarn, BuildContext buildContext) {
         log_ = log;
         acceptWarn_ = jswarn;
-        buildContext_=buildContext;
+        buildContext_ = buildContext;
     }
 
     public void setDefaultFileName(String v) {
@@ -65,12 +66,12 @@ public class ErrorReporter4Mojo implements ErrorReporter {
         }
         if (sourceName != null) {
             back.append(sourceName)
-                .append(":line ")
-                .append(line)
-                .append(":column ")
-                .append(lineOffset)
-                .append(':')
-                ;
+                    .append(":line ")
+                    .append(line)
+                    .append(":column ")
+                    .append(lineOffset)
+                    .append(':')
+            ;
         }
         if ((message != null) && (message.length() != 0)) {
             back.append(message);
@@ -79,14 +80,14 @@ public class ErrorReporter4Mojo implements ErrorReporter {
         }
         if ((lineSource != null) && (lineSource.length() != 0)) {
             back.append("\n\t")
-                .append(lineSource)
-                ;
+                    .append(lineSource)
+            ;
         }
         return back.toString();
     }
 
-	public void setFile(File file) {
-		sourceFile_=file;
-	}
+    public void setFile(File file) {
+        sourceFile_ = file;
+    }
 
 }

@@ -1,17 +1,16 @@
 package net_alchim31_maven_yuicompressor;
 
+import junit.framework.TestCase;
+import org.codehaus.plexus.util.FileUtils;
+import org.sonatype.plexus.build.incremental.DefaultBuildContext;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
 
-import junit.framework.TestCase;
-
-import org.codehaus.plexus.util.FileUtils;
-import org.sonatype.plexus.build.incremental.DefaultBuildContext;
-
 public class AggregationTestCase extends TestCase {
     private File dir_;
-    
+
     private DefaultBuildContext defaultBuildContext = new DefaultBuildContext();
 
     @Override
@@ -31,17 +30,17 @@ public class AggregationTestCase extends TestCase {
         target.output = new File(dir_, "output.js");
 
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertFalse(target.output.exists());
 
         target.includes = new String[]{};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertFalse(target.output.exists());
 
         target.includes = new String[]{"**/*.js"};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertFalse(target.output.exists());
     }
 
@@ -54,7 +53,7 @@ public class AggregationTestCase extends TestCase {
         target.includes = new String[]{f1.getName()};
 
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1), FileUtils.fileRead(target.output));
     }
@@ -71,14 +70,14 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f1.getName(), f2.getName()};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
 
         target.output.delete();
         target.includes = new String[]{"*.js"};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
@@ -95,14 +94,14 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f1.getName(), f1.getName(), f2.getName()};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
 
         target.output.delete();
         target.includes = new String[]{f1.getName(), "*.js"};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
@@ -119,7 +118,7 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f2.getName(), f1.getName()};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f2) + FileUtils.fileRead(f1), FileUtils.fileRead(target.output));
     }
@@ -137,7 +136,7 @@ public class AggregationTestCase extends TestCase {
         target.includes = new String[]{f1.getName(), f2.getName()};
 
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + "\n" + FileUtils.fileRead(f2) + "\n", FileUtils.fileRead(target.output));
     }
@@ -154,7 +153,7 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f1.getAbsolutePath(), f2.getName()};
         assertFalse(target.output.exists());
-        target.run(null,defaultBuildContext);
+        target.run(null, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }
@@ -172,7 +171,7 @@ public class AggregationTestCase extends TestCase {
 
             target.includes = new String[]{f1.getAbsolutePath(), f2.getName()};
             assertFalse(target.output.exists());
-            target.run(null,defaultBuildContext);
+            target.run(null, defaultBuildContext);
             assertTrue(target.output.exists());
             assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
         } finally {
@@ -196,14 +195,14 @@ public class AggregationTestCase extends TestCase {
 
         target.includes = new String[]{f1.getName(), f2.getName()};
         assertFalse(target.output.exists());
-        target.run(previouslyIncluded,defaultBuildContext);
+        target.run(previouslyIncluded, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
 
         target.output.delete();
         target.includes = new String[]{"*.js"};
         assertFalse(target.output.exists());
-        target.run(previouslyIncluded,defaultBuildContext);
+        target.run(previouslyIncluded, defaultBuildContext);
         assertTrue(target.output.exists());
         assertEquals(FileUtils.fileRead(f1) + FileUtils.fileRead(f2), FileUtils.fileRead(target.output));
     }

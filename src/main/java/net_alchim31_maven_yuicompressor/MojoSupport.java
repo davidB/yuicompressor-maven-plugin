@@ -1,8 +1,5 @@
 package net_alchim31_maven_yuicompressor;
 
-import java.io.File;
-import java.util.List;
-
 import org.apache.maven.model.Resource;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -11,6 +8,9 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.Scanner;
 import org.sonatype.plexus.build.incremental.BuildContext;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Common class for mojos.
@@ -121,8 +121,10 @@ public abstract class MojoSupport extends AbstractMojo {
      */
     protected boolean failOnWarning;
 
-    /** @component */
-   	protected BuildContext buildContext;
+    /**
+     * @component
+     */
+    protected BuildContext buildContext;
 
     protected ErrorReporter4Mojo jsErrorReporter_;
 
@@ -139,21 +141,21 @@ public abstract class MojoSupport extends AbstractMojo {
             beforeProcess();
             processDir(sourceDirectory, outputDirectory, null, useProcessedResources);
             if (!excludeResources) {
-              for (Resource resource : resources){
-                  File destRoot = outputDirectory;
-                  if (resource.getTargetPath() != null) {
-                      destRoot = new File(outputDirectory, resource.getTargetPath());
-                  }
-                  processDir(new File( resource.getDirectory() ), destRoot, resource.getExcludes(), useProcessedResources);
-              }
+                for (Resource resource : resources) {
+                    File destRoot = outputDirectory;
+                    if (resource.getTargetPath() != null) {
+                        destRoot = new File(outputDirectory, resource.getTargetPath());
+                    }
+                    processDir(new File(resource.getDirectory()), destRoot, resource.getExcludes(), useProcessedResources);
+                }
             }
             if (!excludeWarSourceDirectory) {
-            	processDir(warSourceDirectory, webappDirectory, null, useProcessedResources);
+                processDir(warSourceDirectory, webappDirectory, null, useProcessedResources);
             }
             afterProcess();
             getLog().info(String.format("nb warnings: %d, nb errors: %d", jsErrorReporter_.getWarningCnt(), jsErrorReporter_.getErrorCnt()));
             if (failOnWarning && (jsErrorReporter_.getWarningCnt() > 0)) {
-                throw new MojoFailureException("warnings on "+ this.getClass().getSimpleName() + "=> failure ! (see log)");
+                throw new MojoFailureException("warnings on " + this.getClass().getSimpleName() + "=> failure ! (see log)");
             }
         } catch (RuntimeException exc) {
             throw exc;
@@ -167,14 +169,17 @@ public abstract class MojoSupport extends AbstractMojo {
     }
 
     protected abstract String[] getDefaultIncludes() throws Exception;
+
     protected abstract void beforeProcess() throws Exception;
+
     protected abstract void afterProcess() throws Exception;
 
     /**
      * Force to use defaultIncludes (ignore srcIncludes) to avoid processing resources/includes from other type than *.css or *.js
-     * @see https://github.com/davidB/yuicompressor-maven-plugin/issues/19
+     *
+     * see https://github.com/davidB/yuicompressor-maven-plugin/issues/19
      */
-    protected void processDir(File srcRoot, File destRoot, List<String> srcExcludes, boolean destAsSource) throws Exception {
+    private void processDir(File srcRoot, File destRoot, List<String> srcExcludes, boolean destAsSource) throws Exception {
         if (srcRoot == null) {
             return;
         }
@@ -186,12 +191,12 @@ public abstract class MojoSupport extends AbstractMojo {
         if (destRoot == null) {
             throw new MojoFailureException("destination directory for " + srcRoot + " is null");
         }
-        Scanner scanner = new DirectoryScanner();
-        if(!buildContext.isIncremental()){
+        Scanner scanner;
+        if (!buildContext.isIncremental()) {
             DirectoryScanner dScanner = new DirectoryScanner();
             dScanner.setBasedir(srcRoot);
             scanner = dScanner;
-        }else{
+        } else {
             scanner = buildContext.newScanner(srcRoot);
         }
 
@@ -201,28 +206,28 @@ public abstract class MojoSupport extends AbstractMojo {
             scanner.setIncludes(includes.toArray(new String[0]));
         }
 
-        if ( (srcExcludes != null) && !srcExcludes.isEmpty() ) {
-            scanner.setExcludes( srcExcludes.toArray( EMPTY_STRING_ARRAY ) );
+        if ((srcExcludes != null) && !srcExcludes.isEmpty()) {
+            scanner.setExcludes(srcExcludes.toArray(EMPTY_STRING_ARRAY));
         }
         if ((excludes != null) && !excludes.isEmpty()) {
-            scanner.setExcludes( excludes.toArray( EMPTY_STRING_ARRAY ) );
+            scanner.setExcludes(excludes.toArray(EMPTY_STRING_ARRAY));
         }
         scanner.addDefaultExcludes();
 
         scanner.scan();
 
         String[] includedFiles = scanner.getIncludedFiles();
-        if(includedFiles == null || includedFiles.length == 0){
-            if(buildContext.isIncremental()){
+        if (includedFiles == null || includedFiles.length == 0) {
+            if (buildContext.isIncremental()) {
                 getLog().info("No files have changed, so skipping the processing");
-            }else{
+            } else {
                 getLog().info("No files to be processed");
             }
             return;
         }
-        for(String name :includedFiles ) {
+        for (String name : includedFiles) {
             SourceFile src = new SourceFile(srcRoot, destRoot, name, destAsSource);
-            jsErrorReporter_.setDefaultFileName("..." + src.toFile().getAbsolutePath().substring(src.toFile().getAbsolutePath().lastIndexOf('/')+1));
+            jsErrorReporter_.setDefaultFileName("..." + src.toFile().getAbsolutePath().substring(src.toFile().getAbsolutePath().lastIndexOf('/') + 1));
             jsErrorReporter_.setFile(src.toFile());
             processFile(src);
         }

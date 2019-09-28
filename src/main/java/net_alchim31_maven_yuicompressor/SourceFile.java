@@ -16,7 +16,7 @@ public class SourceFile {
         destAsSource_ = destAsSource;
         rpath_ = name;
         int sep = rpath_.lastIndexOf('.');
-        if (sep>0) {
+        if (sep > 0) {
             extension_ = rpath_.substring(sep);
             rpath_ = rpath_.substring(0, sep);
         } else {

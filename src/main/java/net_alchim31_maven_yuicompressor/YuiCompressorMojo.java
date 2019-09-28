@@ -1,32 +1,23 @@
 package net_alchim31_maven_yuicompressor;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import com.yahoo.platform.yui.compressor.CssCompressor;
+import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
+
+import java.io.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
-
-import com.yahoo.platform.yui.compressor.CssCompressor;
-import com.yahoo.platform.yui.compressor.JavaScriptCompressor;
-
 /**
  * Apply compression on JS and CSS (using YUI Compressor).
  *
+ * @author David Bernard
  * @goal compress
  * @phase process-resources
- *
- * @author David Bernard
  * @created 2007-08-28
  * @threadSafe
  */
@@ -129,12 +120,14 @@ public class YuiCompressorMojo extends MojoSupport {
 
     /**
      * aggregate files before minify
+     *
      * @parameter property="maven.yuicompressor.preProcessAggregates" default-value="false"
      */
     private boolean preProcessAggregates;
 
     /**
      * use the input file as output when the compressed file is larger than the original
+     *
      * @parameter property="maven.yuicompressor.useSmallestFile" default-value="true"
      */
     private boolean useSmallestFile;
@@ -158,31 +151,31 @@ public class YuiCompressorMojo extends MojoSupport {
             suffix = "";
         }
 
-        if(preProcessAggregates) aggregate();
+        if (preProcessAggregates) aggregate();
     }
 
     @Override
     protected void afterProcess() throws Exception {
         if (statistics && (inSizeTotal_ > 0)) {
-            getLog().info(String.format("total input (%db) -> output (%db)[%d%%]", inSizeTotal_, outSizeTotal_, ((outSizeTotal_ * 100)/inSizeTotal_)));
+            getLog().info(String.format("total input (%db) -> output (%db)[%d%%]", inSizeTotal_, outSizeTotal_, ((outSizeTotal_ * 100) / inSizeTotal_)));
         }
 
-        if(!preProcessAggregates) aggregate();
+        if (!preProcessAggregates) aggregate();
     }
 
     private void aggregate() throws Exception {
         if (aggregations != null) {
             Set<File> previouslyIncludedFiles = new HashSet<File>();
-            for(Aggregation aggregation : aggregations) {
+            for (Aggregation aggregation : aggregations) {
                 getLog().info("generate aggregation : " + aggregation.output);
-                Collection<File> aggregatedFiles = aggregation.run(previouslyIncludedFiles,buildContext, incrementalFiles);
+                Collection<File> aggregatedFiles = aggregation.run(previouslyIncludedFiles, buildContext, incrementalFiles);
                 previouslyIncludedFiles.addAll(aggregatedFiles);
 
                 File gzipped = gzipIfRequested(aggregation.output);
                 if (statistics) {
                     if (gzipped != null) {
                         getLog().info(String.format("%s (%db) -> %s (%db)[%d%%]", aggregation.output.getName(), aggregation.output.length(), gzipped.getName(), gzipped.length(), ratioOfSize(aggregation.output, gzipped)));
-                    } else if (aggregation.output.exists()){
+                    } else if (aggregation.output.exists()) {
                         getLog().info(String.format("%s (%db)", aggregation.output.getName(), aggregation.output.length()));
                     } else {
                         getLog().warn(String.format("%s not created", aggregation.output.getName()));
@@ -196,20 +189,20 @@ public class YuiCompressorMojo extends MojoSupport {
     protected void processFile(SourceFile src) throws Exception {
         File inFile = src.toFile();
         getLog().debug("on incremental build only compress if input file has Delta");
-        if(buildContext.isIncremental()){
-            if(!buildContext.hasDelta(inFile)){
+        if (buildContext.isIncremental()) {
+            if (!buildContext.hasDelta(inFile)) {
                 if (getLog().isInfoEnabled()) {
                     getLog().info("nothing to do, " + inFile + " has no Delta");
                 }
-            	return;
+                return;
             }
-            if(incrementalFiles == null){
-            	incrementalFiles = new HashSet<String>();
+            if (incrementalFiles == null) {
+                incrementalFiles = new HashSet<String>();
             }
         }
 
         if (getLog().isDebugEnabled()) {
-            getLog().debug("compress file :" + src.toFile()+ " to " + src.toDestFile(suffix));
+            getLog().debug("compress file :" + src.toFile() + " to " + src.toDestFile(suffix));
         }
 
         File outFile = src.toDestFile(suffix);
@@ -234,7 +227,7 @@ public class YuiCompressorMojo extends MojoSupport {
         try {
             in = new InputStreamReader(new FileInputStream(inFile), encoding);
             if (!outFile.getParentFile().exists() && !outFile.getParentFile().mkdirs()) {
-                throw new MojoExecutionException( "Cannot create resource output directory: " + outFile.getParentFile() );
+                throw new MojoExecutionException("Cannot create resource output directory: " + outFile.getParentFile());
             }
             getLog().debug("use a temporary outputfile (in case in == out)");
 
@@ -267,7 +260,7 @@ public class YuiCompressorMojo extends MojoSupport {
             buildContext.refresh(outFile);
         }
 
-        if(buildContext.isIncremental()){
+        if (buildContext.isIncremental()) {
             incrementalFiles.add(outFile.getAbsolutePath());
         }
 
@@ -292,12 +285,12 @@ public class YuiCompressorMojo extends MojoSupport {
 
     private void compressCss(InputStreamReader in, OutputStreamWriter out)
             throws IOException {
-        try{
+        try {
             CssCompressor compressor = new CssCompressor(in);
             compressor.compress(out, linebreakpos);
-        }catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
-                    "Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again",e);
+                    "Unexpected characters found in CSS file. Ensure that the CSS file does not contain '$', and try again", e);
         }
     }
 
@@ -308,12 +301,12 @@ public class YuiCompressorMojo extends MojoSupport {
         if (".gz".equalsIgnoreCase(FileUtils.getExtension(file.getName()))) {
             return null;
         }
-        File gzipped = new File(file.getAbsolutePath()+".gz");
+        File gzipped = new File(file.getAbsolutePath() + ".gz");
         getLog().debug(String.format("create gzip version : %s", gzipped.getName()));
         GZIPOutputStream out = null;
         FileInputStream in = null;
         try {
-            out = new GZIPOutputStream(buildContext.newFileOutputStream(gzipped)){
+            out = new GZIPOutputStream(buildContext.newFileOutputStream(gzipped)) {
                 {
                     def.setLevel(level);
                 }
@@ -330,24 +323,18 @@ public class YuiCompressorMojo extends MojoSupport {
     protected long ratioOfSize(File file100, File fileX) throws Exception {
         long v100 = Math.max(file100.length(), 1);
         long vX = Math.max(fileX.length(), 1);
-        return (vX * 100)/v100;
+        return (vX * 100) / v100;
     }
 
     private boolean isMinifiedFile(File inFile) {
         String filename = inFile.getName().toLowerCase();
-        if (filename.endsWith(suffix + ".js") || filename.endsWith(suffix + ".css")) {
-            return true;
-        }
-        return false;
+        return filename.endsWith(suffix + ".js") || filename.endsWith(suffix + ".css");
     }
 
     private static boolean minifiedFileExistsInSource(File source, File dest) throws InterruptedException {
         String parent = source.getParent();
         String destFilename = dest.getName();
         File file = new File(parent + File.separator + destFilename);
-        if (file.exists()) {
-            return true;
-        }
-        return false;
+        return file.exists();
     }
 }
