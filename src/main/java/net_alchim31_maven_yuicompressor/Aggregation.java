@@ -90,10 +90,13 @@ public class Aggregation {
             inputDir = output.getParentFile();
         }
         inputDir = inputDir.getCanonicalFile();
+        if (!inputDir.isDirectory()) {
+            throw new IllegalStateException("input directory not found: " + inputDir);
+        }
     }
 
     private List<File> getIncludedFiles(Collection<File> previouslyIncludedFiles, BuildContext buildContext, Set<String> incrementalFiles) throws Exception {
-        List<File> filesToAggregate = new ArrayList<File>();
+        List<File> filesToAggregate = new ArrayList<>();
         if (includes != null) {
             for (String include : includes) {
                 addInto(include, filesToAggregate, previouslyIncludedFiles);
