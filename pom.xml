@@ -187,7 +187,33 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.9.1</version>
+            <version>3.1.1</version>
+            <configuration>
+                <minmemory>128m</minmemory>
+                <maxmemory>512m</maxmemory>
+                <useStandardDocletOptions>true</useStandardDocletOptions>
+                <charset>${encoding}</charset>
+                <encoding>${encoding}</encoding>
+                <docencoding>${encoding}</docencoding>
+                <docfilessubdirs>true</docfilessubdirs>
+                <breakiterator>true</breakiterator>
+                <version>true</version>
+                <author>true</author>
+                <keywords>true</keywords>
+                <attach>false</attach>
+                <doclint>-missing</doclint>
+                <links>
+                    <link>http://java.sun.com/j2se/${maven.compiler.source}/docs/api/</link>
+                    <link>http://slf4j.org/api/</link>
+                    <link>http://commons.apache.org/lang/api-release/</link>
+                    <link>http://commons.apache.org/io/api-release/</link>
+                    <link>http://junit.sourceforge.net/javadoc/</link>
+                </links>
+                <!-- additionalparam>-nopackagediagram</additionalparam-->
+                <!-- additionalparam>-sourceclasspath ${project.build.outputDirectory}</additionalparam-->
+                <!-- -sourceclasspath ${project.build.outputDirectory} -->
+                <excludePackageNames>${project.groupId}.example*:${project.groupId}.util.internal*</excludePackageNames>
+            </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -209,35 +235,6 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-javadoc-plugin</artifactId>
-              <configuration>
-                <minmemory>128m</minmemory>
-                <maxmemory>512m</maxmemory>
-                <useStandardDocletOptions>true</useStandardDocletOptions>
-                <charset>${encoding}</charset>
-                <encoding>${encoding}</encoding>
-                <docencoding>${encoding}</docencoding>
-                <docfilessubdirs>true</docfilessubdirs>
-                <breakiterator>true</breakiterator>
-                <version>true</version>
-                <author>true</author>
-                <keywords>true</keywords>
-                <attach>false</attach>
-                <!--
-               <doctitle>${project.name} API Reference (${project.version}, r${buildNumber})</doctitle>
-               <windowtitle>${project.name} API Reference (${project.version}, r${buildNumber})</windowtitle>
-                -->
-                <links>
-                  <link>http://java.sun.com/j2se/${maven.compiler.source}/docs/api/</link>
-                  <link>http://slf4j.org/api/</link>
-                  <link>http://commons.apache.org/lang/api-release/</link>
-                  <link>http://commons.apache.org/io/api-release/</link>
-                  <link>http://junit.sourceforge.net/javadoc/</link>
-                </links>
-                <!-- additionalparam>-nopackagediagram</additionalparam-->
-                <!-- additionalparam>-sourceclasspath ${project.build.outputDirectory}</additionalparam-->
-                <!-- -sourceclasspath ${project.build.outputDirectory} -->
-                <excludePackageNames>${project.groupId}.example*:${project.groupId}.util.internal*</excludePackageNames>
-              </configuration>
             </plugin>
             <!--
             <plugin>
