@@ -1,0 +1,12 @@
+language: java
+sudo: false # faster builds
+jdk:
+  - openjdk8
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.m2/repository/
+
+script: "./mvnw package integration-test javadoc:jar site"
+
